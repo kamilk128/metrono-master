@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/services.dart';
 
-enum MetronomeState { Playing, Stopped, Stopping }
+enum MetronomeState { playing, stopped, stopping }
 
 class MetronomeControl extends StatefulWidget {
   const MetronomeControl({super.key});
@@ -23,7 +23,7 @@ class MetronomeControlState extends State<MetronomeControl> {
 
   bool _bobPanning = false;
 
-  MetronomeState _metronomeState = MetronomeState.Stopped;
+  MetronomeState _metronomeState = MetronomeState.stopped;
   int? _lastFrameTime = 0;
   Timer? _tickTimer;
   Timer? _frameTimer;
@@ -43,7 +43,7 @@ class MetronomeControlState extends State<MetronomeControl> {
   }
 
   void _start() {
-    _metronomeState = MetronomeState.Playing;
+    _metronomeState = MetronomeState.playing;
 
     double bps = _tempo / 60;
     _tickInterval = 1000 ~/ bps;
@@ -61,8 +61,8 @@ class MetronomeControlState extends State<MetronomeControl> {
     _frameTimer?.cancel();
     int thisFrameTime = DateTime.now().millisecondsSinceEpoch;
 
-    if (_metronomeState == MetronomeState.Playing ||
-        _metronomeState == MetronomeState.Stopping) {
+    if (_metronomeState == MetronomeState.playing ||
+        _metronomeState == MetronomeState.stopping) {
       int delay =
           max(0, _lastFrameTime! + 17 - DateTime.now().millisecondsSinceEpoch);
       _frameTimer = Timer(Duration(milliseconds: delay), () {
@@ -81,21 +81,21 @@ class MetronomeControlState extends State<MetronomeControl> {
       _lastEvenTick = DateTime.now().millisecondsSinceEpoch;
     }
 
-    if (_metronomeState == MetronomeState.Playing) {
+    if (_metronomeState == MetronomeState.playing) {
       SystemSound.play(SystemSoundType.click);
-    } else if (_metronomeState == MetronomeState.Stopping) {
+    } else if (_metronomeState == MetronomeState.stopping) {
       _tickTimer?.cancel();
-      _metronomeState = MetronomeState.Stopped;
+      _metronomeState = MetronomeState.stopped;
     }
   }
 
   void _stop() {
-    _metronomeState = MetronomeState.Stopping;
+    _metronomeState = MetronomeState.stopping;
     if (mounted) setState(() {});
   }
 
   void _tap() {
-    if (_metronomeState != MetronomeState.Stopped) return;
+    if (_metronomeState != MetronomeState.stopped) return;
     int now = DateTime.now().millisecondsSinceEpoch;
     _tapTimes.add(now);
     if (_tapTimes.length > 3) {
@@ -130,8 +130,8 @@ class MetronomeControlState extends State<MetronomeControl> {
 
     int now = DateTime.now().millisecondsSinceEpoch;
     double oscillationPercent = 0;
-    if (_metronomeState == MetronomeState.Playing ||
-        _metronomeState == MetronomeState.Stopping) {
+    if (_metronomeState == MetronomeState.playing ||
+        _metronomeState == MetronomeState.stopping) {
       int delta = now - _lastEvenTick!;
       if (delta > _tickInterval! * 2) {
         delta -= (_tickInterval! * 2);
@@ -193,32 +193,32 @@ class MetronomeControlState extends State<MetronomeControl> {
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.purple,
-                  onPrimary: Colors.white,
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.purple,
                 ),
-                child: Text(_metronomeState == MetronomeState.Stopped
-                    ? "Start"
-                    : _metronomeState == MetronomeState.Stopping
-                        ? "Stopping"
-                        : "Stop"),
-                onPressed: _metronomeState == MetronomeState.Stopping
+                onPressed: _metronomeState == MetronomeState.stopping
                     ? null
                     : () {
-                        _metronomeState == MetronomeState.Stopped
+                        _metronomeState == MetronomeState.stopped
                             ? _start()
                             : _stop();
-                      }),
+                      },
+                child: Text(_metronomeState == MetronomeState.stopped
+                    ? "Start"
+                    : _metronomeState == MetronomeState.stopping
+                        ? "Stopping"
+                        : "Stop")),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.purple,
-                onPrimary: Colors.white,
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.purple,
               ),
-              child: const Text("Tap"),
-              onPressed: _metronomeState == MetronomeState.Stopped
+              onPressed: _metronomeState == MetronomeState.stopped
                   ? () {
                       _tap();
                     }
                   : null,
+              child: const Text("Tap"),
             )
           ]),
           const SizedBox(height: 20),
@@ -226,7 +226,7 @@ class MetronomeControlState extends State<MetronomeControl> {
   }
 
   Widget _wand(double width, double height) {
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: GestureDetector(
@@ -265,7 +265,7 @@ class MetronomeControlState extends State<MetronomeControl> {
   }
 
   bool _bobHitTest(double width, double height, Offset localPosition) {
-    if (_metronomeState != MetronomeState.Stopped) return false;
+    if (_metronomeState != MetronomeState.stopped) return false;
 
     Offset translatedLocalPos =
         localPosition.translate(-width / 2, -height * 0.75);
@@ -340,7 +340,7 @@ class MetronomeWandPainter extends CustomPainter {
 
   static ui.Picture? wandPicture;
 
-  Color _bobTextColor = Colors.white;
+  final Color _bobTextColor = Colors.white;
   Map<String, Paint>? paints;
 
   MetronomeWandPainter(
@@ -352,26 +352,25 @@ class MetronomeWandPainter extends CustomPainter {
       required this.rotationAngle});
 
   _initFillsAndPaints() {
-    if (paints == null)
-      paints = {
-        "strokeBase": Paint()
-          ..color = Colors.black
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = width * 0.015,
-        "fillCounterWeight": Paint()
-          ..color = Colors.deepPurple
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.fill,
-        "fillRotationCenter": Paint()
-          ..color = Colors.black
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.fill,
-        "fillBob": Paint()
-          ..color = Colors.teal
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.fill,
-      };
+    paints ??= {
+      "strokeBase": Paint()
+        ..color = Colors.black
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = width * 0.015,
+      "fillCounterWeight": Paint()
+        ..color = Colors.deepPurple
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.fill,
+      "fillRotationCenter": Paint()
+        ..color = Colors.black
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.fill,
+      "fillBob": Paint()
+        ..color = Colors.teal
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.fill,
+    };
   }
 
   @override
@@ -397,15 +396,16 @@ class MetronomeWandPainter extends CustomPainter {
     WandCoords wandCoords =
         WandCoords(width, height, tempo, minTempo, maxTempo);
 
-    List<Offset> bobPoints = []
-      ..add(Offset(wandCoords.bobCenter.dx + width / 8,
-          wandCoords.bobCenter.dy + height / 20))
-      ..add(Offset(wandCoords.bobCenter.dx - width / 8,
-          wandCoords.bobCenter.dy + height / 20))
-      ..add(Offset(wandCoords.bobCenter.dx - width / 6,
-          wandCoords.bobCenter.dy - height / 20))
-      ..add(Offset(wandCoords.bobCenter.dx + width / 6,
-          wandCoords.bobCenter.dy - height / 20));
+    List<Offset> bobPoints = [
+      Offset(wandCoords.bobCenter.dx + width / 8,
+          wandCoords.bobCenter.dy + height / 20),
+      Offset(wandCoords.bobCenter.dx - width / 8,
+          wandCoords.bobCenter.dy + height / 20),
+      Offset(wandCoords.bobCenter.dx - width / 6,
+          wandCoords.bobCenter.dy - height / 20),
+      Offset(wandCoords.bobCenter.dx + width / 6,
+          wandCoords.bobCenter.dy - height / 20)
+    ];
 
     Path bobPath = Path()..addPolygon(bobPoints, true);
 
