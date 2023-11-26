@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'metronome.dart';
+import 'navigation.dart';
 
 void main() => runApp(const MyApp());
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
           appBar: AppBar(title: const Text("Metronome")),
-          body: const MetronomeControl()),
+          body: const NavigationPage()),
     );
   }
 }
