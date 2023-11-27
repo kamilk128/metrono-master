@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'navigation.dart';
+import 'models/takt.dart';
+import 'models/trening.dart';
+import 'screens/navigation.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(const MyApp());
 
@@ -8,15 +11,39 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MetronoMaster',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'MetronoMaster',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
+          useMaterial3: true,
+        ),
+        home: Scaffold(appBar: AppBar(title: const Text("Metronome")), body: const NavigationPage()),
       ),
-      home: Scaffold(
-          appBar: AppBar(title: const Text("Metronome")),
-          body: const NavigationPage()),
     );
+  }
+}
+
+class MyAppState extends ChangeNotifier {
+  var currentTrenning = 0;
+
+  List<Trening> treningList = [
+    Trening(name: "Trening 1", taktList: [
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 3, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 8, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 4, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 2, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (6, 8), repetitions: 2, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 2, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 2, transition: Transition.jump),
+      Takt(bmp: 140, metrum: (3, 4), repetitions: 3, transition: Transition.jump),
+    ])
+  ];
+
+  void addTakt(int treningIndex) {}
+  // ↓ Add this.
+  void getNext() {
+    notifyListeners();
   }
 }
