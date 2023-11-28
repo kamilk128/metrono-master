@@ -43,9 +43,15 @@ class MyAppState extends ChangeNotifier {
 
   addNewTrening() {
     treningList.add(Trening(name: 'newTrening', taktList: []));
+    notifyListeners();
   }
 
   deleteTrening(Trening trening) {
     treningList.remove(trening);
+    notifyListeners();
+  }
+
+  refresh() {
+    notifyListeners();
   }
 }

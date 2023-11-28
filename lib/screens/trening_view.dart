@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrono_master/models/trening.dart';
-//import 'package:provider/provider.dart';
-//import '../main.dart';
+import 'package:provider/provider.dart';
+import '../main.dart';
 import '../widgets/takt_row.dart';
 import 'edit_takt_view.dart';
 
@@ -16,8 +16,7 @@ class TreningView extends StatefulWidget {
 class _TreningViewState extends State<TreningView> {
   @override
   Widget build(BuildContext context) {
-    //var appState = context.watch<MyAppState>();
-    //var trening = appState.treningList[appState.currentTrenning];
+    var appState = context.watch<MyAppState>();
     var trening = widget.trening;
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
@@ -33,10 +32,11 @@ class _TreningViewState extends State<TreningView> {
           TextField(
             controller: nameController,
             textAlign: TextAlign.center,
-            onChanged: (value) {
+            onSubmitted: (value) {
               setState(() {
                 widget.trening.name = value;
               });
+              appState.refresh();
             },
             decoration: const InputDecoration(
               border: InputBorder.none,
@@ -58,11 +58,8 @@ class _TreningViewState extends State<TreningView> {
                       index: index,
                       takt: trening.taktList[index],
                       onDeletePressed: () {
-                        // Delete the current Takt when the "Next" button is pressed
                         setState(() {
                           trening.taktList.removeAt(index);
-                          //var treningListJson = appState.treningList.map((trening) => trening.toJson()).toList();
-                          //print(jsonEncode(treningListJson));
                         });
                       },
                     ),

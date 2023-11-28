@@ -17,7 +17,7 @@ class TreningRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.displaySmall!.copyWith();
+    final style = theme.textTheme.displaySmall!.copyWith(fontSize: 32.0);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

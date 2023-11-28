@@ -36,7 +36,7 @@ class TaktRow extends StatelessWidget {
         const Spacer(),
         ElevatedButton(
           onPressed: onDeletePressed,
-          child: Text('X'),
+          child: const Text('X'),
         ),
       ]),
     );
