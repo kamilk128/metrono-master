@@ -41,9 +41,11 @@ class MyAppState extends ChangeNotifier {
     ])
   ];
 
-  void addTakt(int treningIndex) {}
-  // ↓ Add this.
-  void getNext() {
-    notifyListeners();
+  addNewTrening() {
+    treningList.add(Trening(name: 'newTrening', taktList: []));
+  }
+
+  deleteTrening(Trening trening) {
+    treningList.remove(trening);
   }
 }

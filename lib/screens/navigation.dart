@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/screens/trening_view.dart';
-import 'edit_takt_view.dart';
+import 'package:metrono_master/screens/trening_list_view.dart';
 import 'metronome.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -23,10 +22,7 @@ class _NavigationPageState extends State<NavigationPage> {
         page = const MetronomeControl();
         break;
       case 1:
-        page = const TreningViewPage();
-        break;
-      case 2:
-        page = const EditTaktView();
+        page = const TreningListView();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
