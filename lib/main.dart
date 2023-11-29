@@ -46,6 +46,14 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  addNewTakt(Trening trening, Takt takt) {
+    trening.taktList.add(takt);
+  }
+
+  deleteTakt(Trening trening, Takt takt) {
+    trening.taktList.remove(takt);
+  }
+
   deleteTrening(Trening trening) {
     treningList.remove(trening);
     notifyListeners();

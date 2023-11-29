@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:metrono_master/models/trening.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
@@ -32,16 +33,22 @@ class _TreningViewState extends State<TreningView> {
           TextField(
             controller: nameController,
             textAlign: TextAlign.center,
+            onChanged: (value) {
+              widget.trening.name = value;
+            },
+            onTapOutside: (value) {
+              appState.refresh();
+            },
             onSubmitted: (value) {
-              setState(() {
-                widget.trening.name = value;
-              });
               appState.refresh();
             },
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Trening Name',
             ),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(12),
+            ],
             style: style,
           ),
           const Divider(
@@ -57,6 +64,16 @@ class _TreningViewState extends State<TreningView> {
                     TaktRow(
                       index: index,
                       takt: trening.taktList[index],
+                      onEditPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditTaktView(
+                                    trening: trening,
+                                    takt: trening.taktList[index],
+                                  )),
+                        );
+                      },
                       onDeletePressed: () {
                         setState(() {
                           trening.taktList.removeAt(index);
@@ -78,7 +95,7 @@ class _TreningViewState extends State<TreningView> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const EditTaktView()),
+                  MaterialPageRoute(builder: (context) => EditTaktView(trening: widget.trening)),
                 );
               },
               style: ElevatedButton.styleFrom(
