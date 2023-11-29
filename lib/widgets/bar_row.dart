@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/models/takt.dart';
+import 'package:metrono_master/models/bar.dart';
 
-class TaktRow extends StatelessWidget {
-  const TaktRow({
+class BarRow extends StatelessWidget {
+  const BarRow({
     super.key,
     required this.index,
-    required this.takt,
+    required this.bar,
     required this.onDeletePressed,
   });
 
   final int index;
-  final Takt takt;
+  final Bar bar;
   final VoidCallback onDeletePressed;
 
   @override
@@ -28,11 +28,11 @@ class TaktRow extends StatelessWidget {
           color: Colors.black,
           size: style.fontSize,
         ),
-        Text('=${takt.bmp}', style: style),
+        Text('=${bar.tempo}', style: style),
         const Spacer(),
-        Text('${takt.metrum.$1}/${takt.metrum.$2}', style: style),
+        Text('${bar.meter.$1}/${bar.meter.$2}', style: style),
         const Spacer(),
-        Text('x${takt.repetitions}', style: style),
+        Text('x${bar.repetitions}', style: style),
         const Spacer(),
         ElevatedButton(
           onPressed: onDeletePressed,

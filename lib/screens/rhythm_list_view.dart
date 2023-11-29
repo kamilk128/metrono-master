@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/widgets/trening_row.dart';
+import 'package:metrono_master/widgets/rhythm_row.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
-import 'trening_view.dart';
+import 'rhythm_view.dart';
 
-class TreningListView extends StatefulWidget {
-  const TreningListView({Key? key}) : super(key: key);
+class RhythmListView extends StatefulWidget {
+  const RhythmListView({Key? key}) : super(key: key);
 
   @override
-  State<TreningListView> createState() => _TreningListViewState();
+  State<RhythmListView> createState() => _RhythmListViewState();
 }
 
-class _TreningListViewState extends State<TreningListView> {
+class _RhythmListViewState extends State<RhythmListView> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var treningList = appState.treningList;
+    var rhythmList = appState.exampleList;
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
 
@@ -25,24 +25,24 @@ class _TreningListViewState extends State<TreningListView> {
       child: Column(children: [
         Expanded(
           child: ListView.builder(
-            itemCount: treningList.length,
+            itemCount: rhythmList.length,
             itemBuilder: (context, index) {
               return Column(
                 children: [
-                  TreningRow(
-                    trening: treningList[index],
+                  RhythmRow(
+                    rhythm: rhythmList[index],
                     onEditPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TreningView(
-                                  trening: treningList[index],
+                            builder: (context) => RhythmView(
+                                  rhythm: rhythmList[index],
                                 )),
                       );
                     },
                     onDeletePressed: () {
                       setState(() {
-                        appState.deleteTrening(treningList[index]);
+                        appState.deleteRhythm(rhythmList[index]);
                       });
                     },
                   ),
@@ -54,7 +54,7 @@ class _TreningListViewState extends State<TreningListView> {
         ElevatedButton(
           onPressed: () {
             setState(() {
-              appState.addNewTrening();
+              appState.addNewRhythm();
             });
           },
           style: ElevatedButton.styleFrom(

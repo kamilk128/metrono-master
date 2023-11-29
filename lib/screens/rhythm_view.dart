@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/models/trening.dart';
+import 'package:metrono_master/models/rhythm.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
-import '../widgets/takt_row.dart';
-import 'edit_takt_view.dart';
+import '../widgets/bar_row.dart';
+import 'edit_bar_view.dart';
 
-class TreningView extends StatefulWidget {
-  const TreningView({Key? key, required this.trening}) : super(key: key);
-  final Trening trening;
+class RhythmView extends StatefulWidget {
+  const RhythmView({Key? key, required this.rhythm}) : super(key: key);
+  final Rhythm rhythm;
 
   @override
-  State<TreningView> createState() => _TreningViewState();
+  State<RhythmView> createState() => _RhythmViewState();
 }
 
-class _TreningViewState extends State<TreningView> {
+class _RhythmViewState extends State<RhythmView> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var trening = widget.trening;
+    var rhythm = widget.rhythm;
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
-    TextEditingController nameController = TextEditingController(text: widget.trening.name);
+    TextEditingController nameController =
+        TextEditingController(text: widget.rhythm.name);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Podgląd treningu'),
+        title: const Text('Podgląd rytmu'),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -34,13 +35,13 @@ class _TreningViewState extends State<TreningView> {
             textAlign: TextAlign.center,
             onSubmitted: (value) {
               setState(() {
-                widget.trening.name = value;
+                widget.rhythm.name = value;
               });
               appState.refresh();
             },
             decoration: const InputDecoration(
               border: InputBorder.none,
-              hintText: 'Trening Name',
+              hintText: 'Wpisz nazwę rytmu',
             ),
             style: style,
           ),
@@ -50,16 +51,16 @@ class _TreningViewState extends State<TreningView> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: trening.taktList.length,
+              itemCount: rhythm.barList.length,
               itemBuilder: (context, index) {
                 return Column(
                   children: [
-                    TaktRow(
+                    BarRow(
                       index: index,
-                      takt: trening.taktList[index],
+                      bar: rhythm.barList[index],
                       onDeletePressed: () {
                         setState(() {
-                          trening.taktList.removeAt(index);
+                          rhythm.barList.removeAt(index);
                         });
                       },
                     ),
@@ -78,7 +79,7 @@ class _TreningViewState extends State<TreningView> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const EditTaktView()),
+                  MaterialPageRoute(builder: (context) => const EditBarView()),
                 );
               },
               style: ElevatedButton.styleFrom(

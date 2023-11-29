@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/screens/trening_list_view.dart';
+import 'package:metrono_master/screens/rhythm_list_view.dart';
 import 'metronome.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -22,7 +22,7 @@ class _NavigationPageState extends State<NavigationPage> {
         page = const MetronomeControl();
         break;
       case 1:
-        page = const TreningListView();
+        page = const RhythmListView();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -42,12 +42,12 @@ class _NavigationPageState extends State<NavigationPage> {
         backgroundColor: theme.colorScheme.primary,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Trening',
+            icon: Icon(Icons.play_arrow),
+            label: 'Metronom',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Lista treningów',
+            icon: Icon(Icons.queue_music),
+            label: 'Lista Rytmów',
           ),
         ],
         currentIndex: selectedIndex,
