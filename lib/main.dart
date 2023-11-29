@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'models/bar.dart';
-import 'models/rhythm.dart';
+import 'models/takt.dart';
+import 'models/trening.dart';
 import 'screens/navigation.dart';
 import 'package:provider/provider.dart';
 
@@ -19,77 +19,43 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
           useMaterial3: true,
         ),
-        home: Scaffold(
-            appBar: AppBar(title: const Text("MetronoMaster")),
-            body: const NavigationPage()),
+        home: Scaffold(appBar: AppBar(title: const Text("Metronome")), body: const NavigationPage()),
       ),
     );
   }
 }
 
 class MyAppState extends ChangeNotifier {
-  var currentTraining = 0;
+  var currentTrenning = 0;
 
-  List<Rhythm> exampleList = [
-    Rhythm(name: "Trening 1", barList: [
-      Bar(
-          tempo: 120,
-          meter: (4, 4),
-          repetitions: 3,
-          accents: [true, false, false, false],
-          transition: Transition.jump),
-      Bar(
-          tempo: 120,
-          meter: (4, 4),
-          repetitions: 8,
-          accents: [true, false, false, false],
-          transition: Transition.jump),
-      Bar(
-          tempo: 120,
-          meter: (4, 4),
-          repetitions: 4,
-          accents: [true, false, false, false],
-          transition: Transition.jump),
-      Bar(
-          tempo: 120,
-          meter: (4, 4),
-          repetitions: 2,
-          accents: [true, false, false, false],
-          transition: Transition.jump),
-      Bar(
-          tempo: 120,
-          meter: (6, 8),
-          repetitions: 2,
-          accents: [true, false, false, false, false, false],
-          transition: Transition.jump),
-      Bar(
-          tempo: 120,
-          meter: (4, 4),
-          repetitions: 2,
-          accents: [true, false, false, false],
-          transition: Transition.jump),
-      Bar(
-          tempo: 120,
-          meter: (4, 4),
-          repetitions: 2,
-          accents: [true, false, false, false],
-          transition: Transition.jump),
-      Bar(
-          tempo: 140,
-          meter: (3, 4),
-          repetitions: 3,
-          accents: [true, false, false],
-          transition: Transition.jump),
+  List<Trening> treningList = [
+    Trening(name: "Trening 1", taktList: [
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 3, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 8, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 4, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 2, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (6, 8), repetitions: 2, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 2, transition: Transition.jump),
+      Takt(bmp: 120, metrum: (4, 4), repetitions: 2, transition: Transition.jump),
+      Takt(bmp: 140, metrum: (3, 4), repetitions: 3, transition: Transition.jump),
     ])
   ];
 
-  addNewRhythm() {
-    exampleList.add(Rhythm(name: 'Nowy rytm', barList: []));
+  addNewTrening() {
+    treningList.add(Trening(name: 'newTrening', taktList: []));
     notifyListeners();
   }
 
-  deleteRhythm(Rhythm rhythm) {
-    exampleList.remove(rhythm);
+  addNewTakt(Trening trening, Takt takt) {
+    trening.taktList.add(takt);
+  }
+
+  deleteTakt(Trening trening, Takt takt) {
+    trening.taktList.remove(takt);
+  }
+
+  deleteTrening(Trening trening) {
+    treningList.remove(trening);
     notifyListeners();
   }
 

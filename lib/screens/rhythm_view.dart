@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/models/rhythm.dart';
+import 'package:flutter/services.dart';
+import 'package:metrono_master/models/trening.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
-import '../widgets/bar_row.dart';
-import 'edit_bar_view.dart';
+import '../widgets/takt_row.dart';
+import 'edit_takt_view.dart';
 
-class RhythmView extends StatefulWidget {
-  const RhythmView({Key? key, required this.rhythm}) : super(key: key);
-  final Rhythm rhythm;
+class TreningView extends StatefulWidget {
+  const TreningView({Key? key, required this.trening}) : super(key: key);
+  final Trening trening;
 
   @override
-  State<RhythmView> createState() => _RhythmViewState();
+  State<TreningView> createState() => _TreningViewState();
 }
 
-class _RhythmViewState extends State<RhythmView> {
+class _TreningViewState extends State<TreningView> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var rhythm = widget.rhythm;
+    var trening = widget.trening;
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
-    TextEditingController nameController =
-        TextEditingController(text: widget.rhythm.name);
+    TextEditingController nameController = TextEditingController(text: widget.trening.name);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Podgląd rytmu'),
+        title: const Text('Podgląd treningu'),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -33,16 +33,22 @@ class _RhythmViewState extends State<RhythmView> {
           TextField(
             controller: nameController,
             textAlign: TextAlign.center,
+            onChanged: (value) {
+              widget.trening.name = value;
+            },
+            onTapOutside: (value) {
+              appState.refresh();
+            },
             onSubmitted: (value) {
-              setState(() {
-                widget.rhythm.name = value;
-              });
               appState.refresh();
             },
             decoration: const InputDecoration(
               border: InputBorder.none,
-              hintText: 'Wpisz nazwę rytmu',
+              hintText: 'Trening Name',
             ),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(12),
+            ],
             style: style,
           ),
           const Divider(
@@ -51,16 +57,26 @@ class _RhythmViewState extends State<RhythmView> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: rhythm.barList.length,
+              itemCount: trening.taktList.length,
               itemBuilder: (context, index) {
                 return Column(
                   children: [
-                    BarRow(
+                    TaktRow(
                       index: index,
-                      bar: rhythm.barList[index],
+                      takt: trening.taktList[index],
+                      onEditPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditTaktView(
+                                    trening: trening,
+                                    takt: trening.taktList[index],
+                                  )),
+                        );
+                      },
                       onDeletePressed: () {
                         setState(() {
-                          rhythm.barList.removeAt(index);
+                          trening.taktList.removeAt(index);
                         });
                       },
                     ),
@@ -79,7 +95,7 @@ class _RhythmViewState extends State<RhythmView> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const EditBarView()),
+                  MaterialPageRoute(builder: (context) => EditTaktView(trening: widget.trening)),
                 );
               },
               style: ElevatedButton.styleFrom(

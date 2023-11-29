@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/models/bar.dart';
+import 'package:metrono_master/models/takt.dart';
 
-class BarRow extends StatelessWidget {
-  const BarRow({
+class TaktRow extends StatelessWidget {
+  const TaktRow({
     super.key,
     required this.index,
-    required this.bar,
+    required this.takt,
+    required this.onEditPressed,
     required this.onDeletePressed,
   });
 
   final int index;
-  final Bar bar;
+  final Takt takt;
+  final VoidCallback onEditPressed;
   final VoidCallback onDeletePressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.displaySmall!.copyWith();
+    final style = theme.textTheme.displaySmall!.copyWith(fontSize: 32);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -28,15 +30,35 @@ class BarRow extends StatelessWidget {
           color: Colors.black,
           size: style.fontSize,
         ),
-        Text('=${bar.tempo}', style: style),
+        Text('=${takt.bmp}', style: style),
         const Spacer(),
-        Text('${bar.meter.$1}/${bar.meter.$2}', style: style),
+        Text('${takt.metrum.$1}/${takt.metrum.$2}', style: style),
         const Spacer(),
-        Text('x${bar.repetitions}', style: style),
+        Text('x${takt.repetitions}', style: style),
         const Spacer(),
-        ElevatedButton(
-          onPressed: onDeletePressed,
-          child: const Text('X'),
+        Container(
+          width: 50,
+          alignment: Alignment.center,
+          child: IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              onEditPressed();
+            },
+            color: Colors.black,
+            iconSize: style.fontSize!,
+          ),
+        ),
+        Container(
+          width: 50,
+          alignment: Alignment.center,
+          child: IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              onDeletePressed();
+            },
+            color: Colors.black,
+            iconSize: style.fontSize!,
+          ),
         ),
       ]),
     );
