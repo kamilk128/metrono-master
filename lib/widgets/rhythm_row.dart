@@ -28,21 +28,13 @@ class RhythmRow extends StatelessWidget {
           onPressed: () {
             onEditPressed();
           },
-          child: Icon(
-            Icons.edit,
-            color: Colors.black,
-            size: style.fontSize,
-          ),
+          child: Icon(Icons.edit, color: Colors.black, size: style.fontSize),
         ),
         ElevatedButton(
           onPressed: () {
             onDeletePressed();
           },
-          child: Icon(
-            Icons.delete,
-            color: Colors.black,
-            size: style.fontSize,
-          ),
+          child: Icon(Icons.delete, color: Colors.black, size: style.fontSize),
         ),
       ]),
     );
