@@ -47,15 +47,12 @@ class _EditBarViewState extends State<EditBarView> {
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
     final headerStyle = theme.textTheme.headlineSmall!.copyWith();
+    final bodyStyle = theme.textTheme.bodyLarge!.copyWith();
 
-    TextEditingController tempoController =
-        TextEditingController(text: barCopy.tempo.toString());
-    TextEditingController meterTopController =
-        TextEditingController(text: barCopy.meter.$1.toString());
-    TextEditingController meterBottomController =
-        TextEditingController(text: barCopy.meter.$2.toString());
-    TextEditingController repetitionsController =
-        TextEditingController(text: barCopy.repetitions.toString());
+    TextEditingController tempoController = TextEditingController(text: barCopy.tempo.toString());
+    TextEditingController meterTopController = TextEditingController(text: barCopy.meter.$1.toString());
+    TextEditingController meterBottomController = TextEditingController(text: barCopy.meter.$2.toString());
+    TextEditingController repetitionsController = TextEditingController(text: barCopy.repetitions.toString());
 
     return Scaffold(
       appBar: AppBar(
@@ -100,9 +97,10 @@ class _EditBarViewState extends State<EditBarView> {
                     border: InputBorder.none,
                     hintText: 'Wpisz tempo',
                     hintStyle: headerStyle,
+                    contentPadding: const EdgeInsets.all(2),
                   ),
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(3),
+                    LengthLimitingTextInputFormatter(Bar.tempoRange.$2.toString().length),
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   style: style,
@@ -128,8 +126,7 @@ class _EditBarViewState extends State<EditBarView> {
                   textAlign: TextAlign.center,
                   controller: meterTopController,
                   onChanged: (value) {
-                    barCopy
-                        .setMeter((int.tryParse(value) ?? 4, barCopy.meter.$2));
+                    barCopy.setMeter((int.tryParse(value) ?? 4, barCopy.meter.$2));
                   },
                   onTapOutside: (value) {
                     setState(() {});
@@ -142,15 +139,21 @@ class _EditBarViewState extends State<EditBarView> {
                     border: InputBorder.none,
                     hintText: 'Wpisz górne metrum',
                     hintStyle: headerStyle,
+                    contentPadding: const EdgeInsets.all(2),
                   ),
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(1),
+                    LengthLimitingTextInputFormatter(Bar.meterRange.$2.toString().length),
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   style: style,
                 ),
               ),
             ],
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.1, // Adjust the percentage as needed
+            height: 1.0, // Set the divider thickness
+            color: Colors.black,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -160,8 +163,7 @@ class _EditBarViewState extends State<EditBarView> {
                   textAlign: TextAlign.center,
                   controller: meterBottomController,
                   onChanged: (value) {
-                    barCopy
-                        .setMeter((barCopy.meter.$1, int.tryParse(value) ?? 4));
+                    barCopy.setMeter((barCopy.meter.$1, int.tryParse(value) ?? 4));
                   },
                   onTapOutside: (value) {
                     setState(() {});
@@ -174,9 +176,10 @@ class _EditBarViewState extends State<EditBarView> {
                     border: InputBorder.none,
                     hintText: 'Wpisz dolne metrum',
                     hintStyle: headerStyle,
+                    contentPadding: const EdgeInsets.all(2),
                   ),
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(1),
+                    LengthLimitingTextInputFormatter(Bar.meterRange.$2.toString().length),
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   style: style,
@@ -215,13 +218,42 @@ class _EditBarViewState extends State<EditBarView> {
                     border: InputBorder.none,
                     hintText: 'Wpisz liczbę powtórzeń',
                     hintStyle: headerStyle,
+                    contentPadding: const EdgeInsets.all(2),
                   ),
                   inputFormatters: [
-                    LengthLimitingTextInputFormatter(2),
+                    LengthLimitingTextInputFormatter(Bar.repetitionsRange.$2.toString().length),
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   style: style,
                 ),
+              ),
+            ],
+          ),
+          const Divider(
+            color: Colors.black,
+            thickness: 1,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Przejście", style: headerStyle),
+            ],
+          ),
+          DropdownButton<Transition>(
+            value: barCopy.transition,
+            onChanged: (Transition? newValue) {
+              setState(() {
+                barCopy.transition = newValue!;
+              });
+            },
+            items: [
+              DropdownMenuItem(
+                value: Transition.jump,
+                child: Text('Skokowe', style: bodyStyle),
+              ),
+              DropdownMenuItem(
+                value: Transition.linear,
+                child: Text('Liniowe', style: bodyStyle),
               ),
             ],
           ),

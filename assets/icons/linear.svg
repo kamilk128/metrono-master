@@ -1,0 +1,8 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>Layer 1</title>
+  <rect stroke-width="4" id="svg_1" height="60" width="60" y="2" x="2" stroke="#000" fill="#fff"/>
+  <line stroke-width="4" id="svg_2" y2="24" x2="64" y1="40" x1="0" stroke="#000" fill="none"/>
+ </g>
+
+</svg>

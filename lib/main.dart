@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'models/takt.dart';
-import 'models/trening.dart';
+import 'models/bar.dart';
+import 'models/rhythm.dart';
 import 'screens/navigation.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MyApp());
 
@@ -19,52 +23,71 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
           useMaterial3: true,
         ),
-        home: Scaffold(appBar: AppBar(title: const Text("Metronome")), body: const NavigationPage()),
+        home: Scaffold(appBar: AppBar(title: const Text("MetronoMaster")), body: const NavigationPage()),
       ),
     );
   }
 }
 
 class MyAppState extends ChangeNotifier {
-  var currentTrenning = 0;
+  var currentTraining = 0;
 
-  List<Trening> treningList = [
-    Trening(name: "Trening 1", taktList: [
-      Takt(bmp: 120, metrum: (4, 4), repetitions: 3, transition: Transition.jump),
-      Takt(bmp: 120, metrum: (4, 4), repetitions: 8, transition: Transition.jump),
-      Takt(bmp: 120, metrum: (4, 4), repetitions: 4, transition: Transition.jump),
-      Takt(bmp: 120, metrum: (4, 4), repetitions: 2, transition: Transition.jump),
-      Takt(bmp: 120, metrum: (6, 8), repetitions: 2, transition: Transition.jump),
-      Takt(bmp: 120, metrum: (4, 4), repetitions: 2, transition: Transition.jump),
-      Takt(bmp: 120, metrum: (4, 4), repetitions: 2, transition: Transition.jump),
-      Takt(bmp: 140, metrum: (3, 4), repetitions: 3, transition: Transition.jump),
+  List<Rhythm> exampleList = [
+    Rhythm(name: "Trening 1", barList: [
+      Bar(tempo: 120, meter: (4, 4), repetitions: 3, accents: [true, false, false, false], transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 8, accents: [true, false, false, false], transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 4, accents: [true, false, false, false], transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: [true, false, false, false], transition: Transition.jump),
+      Bar(
+          tempo: 120,
+          meter: (6, 8),
+          repetitions: 2,
+          accents: [true, false, false, false, false, false],
+          transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: [true, false, false, false], transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: [true, false, false, false], transition: Transition.jump),
+      Bar(tempo: 140, meter: (3, 4), repetitions: 3, accents: [true, false, false], transition: Transition.jump),
     ])
   ];
 
-  addNewTrening() {
-    treningList.add(Trening(name: 'newTrening', taktList: []));
+  addNewRhythm() {
+    exampleList.add(Rhythm(name: 'Nowy rytm', barList: []));
     notifyListeners();
   }
 
-  addNewTakt(Trening trening, Takt takt) {
-    trening.taktList.add(takt);
-  }
-
-  deleteTakt(Trening trening, Takt takt) {
-    trening.taktList.remove(takt);
-  }
-
-  deleteTrening(Trening trening) {
-    treningList.remove(trening);
+  deleteRhythm(Rhythm rhythm) {
+    exampleList.remove(rhythm);
     notifyListeners();
   }
 
-  addBar(Rhythm rhythm, Bar bar) {
-    rhythm.barList.add(bar);
+  Future<void> save() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      String jsonString = jsonEncode(exampleList.map((rhythm) => rhythm.toJson()).toList());
+
+      await prefs.setString('rhythmList', jsonString);
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
-  deleteBar(Rhythm rhythm, Bar bar) {
-    rhythm.barList.remove(bar);
+  Future<List<Rhythm>> load() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      String jsonString = prefs.getString('rhythmList') ?? '';
+
+      if (jsonString.isNotEmpty) {
+        List<dynamic> jsonList = jsonDecode(jsonString);
+        List<Rhythm> loadedList = jsonList.map((json) => Rhythm.fromJson(json)).toList();
+        return loadedList;
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+
+    return []; // Return an empty list if there's an error or no data is found
   }
 
   refresh() {

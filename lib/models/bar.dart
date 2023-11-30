@@ -46,8 +46,7 @@ class Bar {
   }
 
   setRepetitions(int newRepetitions) {
-    repetitions =
-        newRepetitions.clamp(Bar.repetitionsRange.$1, Bar.repetitionsRange.$2);
+    repetitions = newRepetitions.clamp(Bar.repetitionsRange.$1, Bar.repetitionsRange.$2);
   }
 
   Map<String, dynamic> toJson() => {
@@ -57,4 +56,24 @@ class Bar {
         'accents': accents.toString(),
         'transition': transition.toString(),
       };
+
+  Bar.fromJson(Map<String, dynamic> json)
+      : tempo = json['tempo'],
+        meter = (json['meter']['top'], json['meter']['bottom']),
+        repetitions = json['repetitions'],
+        accents = List<bool>.from(
+            json['accents'].substring(1, json['accents'].length - 1).split(',').map((e) => e.trim() == 'true')),
+        transition = _stringToTransition(json['transition']);
+
+  // Add this helper function to convert a string to the Transition enum
+  static Transition _stringToTransition(String transition) {
+    switch (transition) {
+      case 'Transition.jump':
+        return Transition.jump;
+      case 'Transition.linear':
+        return Transition.linear;
+      default:
+        throw ArgumentError('Invalid transition string: $transition');
+    }
+  }
 }

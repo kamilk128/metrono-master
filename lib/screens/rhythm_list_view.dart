@@ -62,6 +62,26 @@ class _RhythmListViewState extends State<RhythmListView> {
           ),
           child: Icon(Icons.add, color: Colors.black, size: style.fontSize),
         ),
+        ElevatedButton(
+          onPressed: () {
+            appState.save().then((value) => null);
+          },
+          style: ElevatedButton.styleFrom(
+            side: const BorderSide(width: 1, color: Colors.grey),
+          ),
+          child: const Text("save"),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              appState.load().then((value) => {appState.exampleList = value});
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            side: const BorderSide(width: 1, color: Colors.grey),
+          ),
+          child: const Text("load"),
+        ),
       ]),
     );
   }

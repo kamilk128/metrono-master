@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:metrono_master/models/rhythm.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
+import '../models/bar.dart';
 import '../widgets/bar_row.dart';
 import 'edit_bar_view.dart';
 
@@ -21,8 +22,7 @@ class _RhythmViewState extends State<RhythmView> {
     var rhythm = widget.rhythm;
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
-    TextEditingController nameController =
-        TextEditingController(text: widget.rhythm.name);
+    TextEditingController nameController = TextEditingController(text: widget.rhythm.name);
 
     return Scaffold(
       appBar: AppBar(
@@ -57,10 +57,20 @@ class _RhythmViewState extends State<RhythmView> {
             thickness: 1, // Adjust the thickness as needed
           ),
           Expanded(
-            child: ListView.builder(
+            child: ReorderableListView.builder(
+              onReorder: (oldIndex, newIndex) {
+                setState(() {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  final Bar bar = rhythm.barList.removeAt(oldIndex);
+                  rhythm.barList.insert(newIndex, bar);
+                });
+              },
               itemCount: rhythm.barList.length,
               itemBuilder: (context, index) {
                 return Column(
+                  key: ValueKey(index),
                   children: [
                     BarRow(
                       index: index,
@@ -69,10 +79,11 @@ class _RhythmViewState extends State<RhythmView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EditBarView(
-                                    rhythm: rhythm,
-                                    bar: rhythm.barList[index],
-                                  )),
+                            builder: (context) => EditBarView(
+                              rhythm: rhythm,
+                              bar: rhythm.barList[index],
+                            ),
+                          ),
                         );
                       },
                       onDeletePressed: () {
@@ -96,8 +107,7 @@ class _RhythmViewState extends State<RhythmView> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => EditBarView(rhythm: widget.rhythm)),
+                  MaterialPageRoute(builder: (context) => EditBarView(rhythm: widget.rhythm)),
                 );
               },
               style: ElevatedButton.styleFrom(
