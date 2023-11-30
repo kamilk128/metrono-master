@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:metrono_master/models/rhythm.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
@@ -33,16 +34,22 @@ class _RhythmViewState extends State<RhythmView> {
           TextField(
             controller: nameController,
             textAlign: TextAlign.center,
+            onChanged: (value) {
+              widget.rhythm.name = value;
+            },
+            onTapOutside: (value) {
+              appState.refresh();
+            },
             onSubmitted: (value) {
-              setState(() {
-                widget.rhythm.name = value;
-              });
               appState.refresh();
             },
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Wpisz nazwę rytmu',
             ),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(12),
+            ],
             style: style,
           ),
           const Divider(
@@ -58,6 +65,16 @@ class _RhythmViewState extends State<RhythmView> {
                     BarRow(
                       index: index,
                       bar: rhythm.barList[index],
+                      onEditPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditBarView(
+                                    rhythm: rhythm,
+                                    bar: rhythm.barList[index],
+                                  )),
+                        );
+                      },
                       onDeletePressed: () {
                         setState(() {
                           rhythm.barList.removeAt(index);
@@ -79,7 +96,8 @@ class _RhythmViewState extends State<RhythmView> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const EditBarView()),
+                  MaterialPageRoute(
+                      builder: (context) => EditBarView(rhythm: widget.rhythm)),
                 );
               },
               style: ElevatedButton.styleFrom(

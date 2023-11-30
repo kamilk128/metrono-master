@@ -93,6 +93,14 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  addBar(Rhythm rhythm, Bar bar) {
+    rhythm.barList.add(bar);
+  }
+
+  deleteBar(Rhythm rhythm, Bar bar) {
+    rhythm.barList.remove(bar);
+  }
+
   refresh() {
     notifyListeners();
   }
