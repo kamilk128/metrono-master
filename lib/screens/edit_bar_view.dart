@@ -1,37 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:metrono_master/main.dart';
-import 'package:metrono_master/models/trening.dart';
+import 'package:metrono_master/models/rhythm.dart';
 import 'package:provider/provider.dart';
 
-import '../models/takt.dart';
+import '../models/bar.dart';
 
-class EditTaktView extends StatefulWidget {
-  const EditTaktView({
+class EditBarView extends StatefulWidget {
+  const EditBarView({
     Key? key,
-    required this.trening,
-    this.takt,
+    required this.rhythm,
+    this.bar,
   }) : super(key: key);
 
-  final Trening trening;
-  final Takt? takt;
+  final Rhythm rhythm;
+  final Bar? bar;
 
   @override
-  State<EditTaktView> createState() => _EditTaktViewState();
+  State<EditBarView> createState() => _EditBarViewState();
 }
 
-class _EditTaktViewState extends State<EditTaktView> {
-  late Takt taktCopy;
+class _EditBarViewState extends State<EditBarView> {
+  late Bar barCopy;
   late bool isNew;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.takt == null) {
-      taktCopy = Takt(bmp: 100, metrum: (4, 4), repetitions: 1, transition: Transition.jump);
+    if (widget.bar == null) {
+      barCopy = Bar(
+          tempo: 100,
+          meter: (4, 4),
+          repetitions: 1,
+          accents: [false, false, false, false],
+          transition: Transition.jump);
     } else {
-      taktCopy = Takt.fromTakt(widget.takt!);
+      barCopy = Bar.fromBar(widget.bar!);
     }
   }
 
@@ -41,11 +46,16 @@ class _EditTaktViewState extends State<EditTaktView> {
 
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
-    final hstyle = theme.textTheme.displaySmall!.copyWith(fontSize: 20);
-    TextEditingController bmpController = TextEditingController(text: taktCopy.bmp.toString());
-    TextEditingController metrum1Controller = TextEditingController(text: taktCopy.metrum.$1.toString());
-    TextEditingController metrum2Controller = TextEditingController(text: taktCopy.metrum.$2.toString());
-    TextEditingController repetitionsController = TextEditingController(text: taktCopy.repetitions.toString());
+    final headerStyle = theme.textTheme.headlineSmall!.copyWith();
+
+    TextEditingController tempoController =
+        TextEditingController(text: barCopy.tempo.toString());
+    TextEditingController meterTopController =
+        TextEditingController(text: barCopy.meter.$1.toString());
+    TextEditingController meterBottomController =
+        TextEditingController(text: barCopy.meter.$2.toString());
+    TextEditingController repetitionsController =
+        TextEditingController(text: barCopy.repetitions.toString());
 
     return Scaffold(
       appBar: AppBar(
@@ -58,13 +68,13 @@ class _EditTaktViewState extends State<EditTaktView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.music_note_rounded,
+                Icons.music_note,
                 color: Colors.black,
                 size: style.fontSize! / 2.0,
               ),
-              Text("bmp", style: hstyle),
+              Text("Tempo", style: headerStyle),
               Icon(
-                Icons.music_note_rounded,
+                Icons.music_note,
                 color: Colors.black,
                 size: style.fontSize! / 2.0,
               ),
@@ -75,9 +85,9 @@ class _EditTaktViewState extends State<EditTaktView> {
               Expanded(
                 child: TextField(
                   textAlign: TextAlign.center,
-                  controller: bmpController,
+                  controller: tempoController,
                   onChanged: (value) {
-                    taktCopy.setBmp(int.tryParse(value) ?? 100);
+                    barCopy.setTempo(int.tryParse(value) ?? 100);
                   },
                   onTapOutside: (value) {
                     setState(() {});
@@ -86,9 +96,10 @@ class _EditTaktViewState extends State<EditTaktView> {
                     setState(() {});
                   },
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'BMP',
+                    hintText: 'Wpisz tempo',
+                    hintStyle: headerStyle,
                   ),
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(3),
@@ -106,19 +117,19 @@ class _EditTaktViewState extends State<EditTaktView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("metrum", style: hstyle),
+              Text("Metrum", style: headerStyle),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
               Expanded(
                 child: TextField(
                   textAlign: TextAlign.center,
-                  controller: metrum1Controller,
+                  controller: meterTopController,
                   onChanged: (value) {
-                    taktCopy.setMetrum((int.tryParse(value) ?? 4, taktCopy.metrum.$2));
+                    barCopy
+                        .setMeter((int.tryParse(value) ?? 4, barCopy.meter.$2));
                   },
                   onTapOutside: (value) {
                     setState(() {});
@@ -127,9 +138,10 @@ class _EditTaktViewState extends State<EditTaktView> {
                     setState(() {});
                   },
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'n',
+                    hintText: 'Wpisz górne metrum',
+                    hintStyle: headerStyle,
                   ),
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(1),
@@ -138,13 +150,18 @@ class _EditTaktViewState extends State<EditTaktView> {
                   style: style,
                 ),
               ),
-              Text("/", style: style),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               Expanded(
                 child: TextField(
                   textAlign: TextAlign.center,
-                  controller: metrum2Controller,
+                  controller: meterBottomController,
                   onChanged: (value) {
-                    taktCopy.setMetrum((taktCopy.metrum.$1, int.tryParse(value) ?? 4));
+                    barCopy
+                        .setMeter((barCopy.meter.$1, int.tryParse(value) ?? 4));
                   },
                   onTapOutside: (value) {
                     setState(() {});
@@ -153,9 +170,10 @@ class _EditTaktViewState extends State<EditTaktView> {
                     setState(() {});
                   },
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'm',
+                    hintText: 'Wpisz dolne metrum',
+                    hintStyle: headerStyle,
                   ),
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(1),
@@ -164,7 +182,6 @@ class _EditTaktViewState extends State<EditTaktView> {
                   style: style,
                 ),
               ),
-              const Spacer(),
             ],
           ),
           const Divider(
@@ -174,7 +191,7 @@ class _EditTaktViewState extends State<EditTaktView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("repetitions", style: hstyle),
+              Text("Liczba powtórzeń", style: headerStyle),
             ],
           ),
           Row(
@@ -185,7 +202,7 @@ class _EditTaktViewState extends State<EditTaktView> {
                   textAlign: TextAlign.center,
                   controller: repetitionsController,
                   onChanged: (value) {
-                    taktCopy.setRepetitions(int.tryParse(value) ?? 1);
+                    barCopy.setRepetitions(int.tryParse(value) ?? 1);
                   },
                   onTapOutside: (value) {
                     setState(() {});
@@ -194,9 +211,10 @@ class _EditTaktViewState extends State<EditTaktView> {
                     setState(() {});
                   },
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'x',
+                    hintText: 'Wpisz liczbę powtórzeń',
+                    hintStyle: headerStyle,
                   ),
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(2),
@@ -214,15 +232,15 @@ class _EditTaktViewState extends State<EditTaktView> {
           const Spacer(),
           ElevatedButton(
             onPressed: () {
-              if (widget.takt == null) {
-                widget.trening.taktList.add(taktCopy);
+              if (widget.bar == null) {
+                widget.rhythm.barList.add(barCopy);
               } else {
-                widget.takt!.setFromTakt(taktCopy);
+                widget.bar!.setFromBar(barCopy);
               }
               appState.refresh();
               Navigator.pop(context);
             },
-            child: const Text('Submit'),
+            child: const Text('Zapisz takt'),
           ),
           const Spacer(),
         ],

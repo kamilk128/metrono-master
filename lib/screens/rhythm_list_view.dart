@@ -60,11 +60,7 @@ class _RhythmListViewState extends State<RhythmListView> {
           style: ElevatedButton.styleFrom(
             side: const BorderSide(width: 1, color: Colors.grey),
           ),
-          child: Icon(
-            Icons.add,
-            color: Colors.black,
-            size: style.fontSize,
-          ),
+          child: Icon(Icons.add, color: Colors.black, size: style.fontSize),
         ),
       ]),
     );
