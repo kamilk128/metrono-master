@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:metrono_master/models/bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class BarRow extends StatelessWidget {
-  const BarRow({
+  BarRow({
     super.key,
     required this.index,
     required this.bar,
@@ -15,11 +16,35 @@ class BarRow extends StatelessWidget {
   final VoidCallback onEditPressed;
   final VoidCallback onDeletePressed;
 
+  final Widget jump = SvgPicture.asset(
+    "./assets/icons/jump.svg",
+    semanticsLabel: 'jump',
+    height: 24,
+    width: 24,
+  );
+  final Widget linear = SvgPicture.asset(
+    "./assets/icons/linear.svg",
+    semanticsLabel: 'linear',
+    height: 24,
+    width: 24,
+  );
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith(fontSize: 32.0);
     final meterStyle = theme.textTheme.headlineSmall!.copyWith(height: 1.0);
+
+    final transitionIcon = (() {
+      switch (bar.transition) {
+        case Transition.jump:
+          return jump;
+        case Transition.linear:
+          return linear;
+        default:
+          return const Icon(Icons.help); // or any default value
+      }
+    })();
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -38,29 +63,43 @@ class BarRow extends StatelessWidget {
         const Spacer(),
         Text('x${bar.repetitions}', style: style),
         const Spacer(),
-        Container(
-          width: 50,
-          alignment: Alignment.center,
-          child: IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              onEditPressed();
-            },
-            color: Colors.black,
-            iconSize: style.fontSize!,
-          ),
-        ),
-        Container(
-          width: 50,
-          alignment: Alignment.center,
-          child: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              onDeletePressed();
-            },
-            color: Colors.black,
-            iconSize: style.fontSize!,
-          ),
+        transitionIcon,
+        const Spacer(),
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            switch (value) {
+              case 'edit':
+                onEditPressed();
+                break;
+              case 'delete':
+                onDeletePressed();
+                break;
+              default:
+                break;
+            }
+          },
+          itemBuilder: (BuildContext context) => [
+            const PopupMenuItem<String>(
+              value: 'edit',
+              child: Row(
+                children: [
+                  Icon(Icons.edit),
+                  SizedBox(width: 8.0),
+                  Text('Edit'),
+                ],
+              ),
+            ),
+            const PopupMenuItem<String>(
+              value: 'delete',
+              child: Row(
+                children: [
+                  Icon(Icons.delete),
+                  SizedBox(width: 8.0),
+                  Text('remove'),
+                ],
+              ),
+            ),
+          ],
         ),
       ]),
     );
