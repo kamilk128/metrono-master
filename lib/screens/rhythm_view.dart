@@ -75,6 +75,7 @@ class _RhythmViewState extends State<RhythmView> {
                     BarRow(
                       index: index,
                       bar: rhythm.barList[index],
+                      previousBar: index > 0 ? rhythm.barList[index - 1] : null,
                       onEditPressed: () {
                         Navigator.push(
                           context,
