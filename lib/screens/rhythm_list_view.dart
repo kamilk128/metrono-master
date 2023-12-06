@@ -69,7 +69,7 @@ class _RhythmListViewState extends State<RhythmListView> {
           style: ElevatedButton.styleFrom(
             side: const BorderSide(width: 1, color: Colors.grey),
           ),
-          child: const Text("save"),
+          child: const Text("Zapisz rytmy na urządzeniu"),
         ),
         ElevatedButton(
           onPressed: () {
@@ -80,7 +80,7 @@ class _RhythmListViewState extends State<RhythmListView> {
           style: ElevatedButton.styleFrom(
             side: const BorderSide(width: 1, color: Colors.grey),
           ),
-          child: const Text("load"),
+          child: const Text("Wczytaj rytmy z urządzenia"),
         ),
       ]),
     );
