@@ -30,11 +30,7 @@ class _EditBarViewState extends State<EditBarView> {
 
     if (widget.bar == null) {
       barCopy = Bar(
-          tempo: 100,
-          meter: (4, 4),
-          repetitions: 1,
-          accents: [false, false, false, false],
-          transition: Transition.jump);
+          tempo: 100, meter: (4, 4), repetitions: 1, accents: Bar.generateAccents(4, 0), transition: Transition.jump);
     } else {
       barCopy = Bar.fromBar(widget.bar!);
     }
@@ -52,6 +48,7 @@ class _EditBarViewState extends State<EditBarView> {
     TextEditingController tempoController = TextEditingController(text: barCopy.tempo.toString());
     TextEditingController meterTopController = TextEditingController(text: barCopy.meter.$1.toString());
     TextEditingController meterBottomController = TextEditingController(text: barCopy.meter.$2.toString());
+    TextEditingController accentsController = TextEditingController(text: barCopy.getAccentPosition().toString());
     TextEditingController repetitionsController = TextEditingController(text: barCopy.repetitions.toString());
 
     return Scaffold(
@@ -132,6 +129,7 @@ class _EditBarViewState extends State<EditBarView> {
                     setState(() {});
                   },
                   onSubmitted: (value) {
+                    barCopy.setAccents(Bar.generateAccents(int.tryParse(value) ?? 4, barCopy.getAccentPosition()));
                     setState(() {});
                   },
                   keyboardType: TextInputType.number,
@@ -236,14 +234,56 @@ class _EditBarViewState extends State<EditBarView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text("Pozycja akcentu", style: headerStyle),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: TextField(
+                  textAlign: TextAlign.center,
+                  controller: accentsController,
+                  onChanged: (value) {
+                    barCopy.setAccents(Bar.generateAccents(barCopy.meter.$1, int.tryParse(value) ?? 0));
+                  },
+                  onTapOutside: (value) {
+                    setState(() {});
+                  },
+                  onSubmitted: (value) {
+                    setState(() {});
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Wpisz pozycję akcentu',
+                    hintStyle: headerStyle,
+                    contentPadding: const EdgeInsets.all(2),
+                  ),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(Bar.accentsRange.$2.toString().length),
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  style: style,
+                ),
+              ),
+            ],
+          ),
+          const Divider(
+            color: Colors.black,
+            thickness: 1,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               Text("Przejście", style: headerStyle),
             ],
           ),
           DropdownButton<Transition>(
             value: barCopy.transition,
-            onChanged: (Transition? newValue) {
+            onChanged: (value) {
               setState(() {
-                barCopy.transition = newValue!;
+                barCopy.setTransition(value!);
               });
             },
             items: [

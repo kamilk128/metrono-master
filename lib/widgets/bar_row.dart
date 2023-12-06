@@ -63,6 +63,15 @@ class BarRow extends StatelessWidget {
         const Spacer(),
         Text('x${bar.repetitions}', style: style),
         const Spacer(),
+        Wrap(
+          direction: Axis.vertical,
+          spacing: -5,
+          children: [
+            Text('>', style: meterStyle),
+            Text('${bar.getAccentPosition()}', style: meterStyle),
+          ],
+        ),
+        const Spacer(),
         transitionIcon,
         const Spacer(),
         PopupMenuButton<String>(
@@ -85,7 +94,7 @@ class BarRow extends StatelessWidget {
                 children: [
                   Icon(Icons.edit),
                   SizedBox(width: 8.0),
-                  Text('Edit'),
+                  Text('Edytuj'),
                 ],
               ),
             ),
@@ -95,7 +104,7 @@ class BarRow extends StatelessWidget {
                 children: [
                   Icon(Icons.delete),
                   SizedBox(width: 8.0),
-                  Text('remove'),
+                  Text('Usuń'),
                 ],
               ),
             ),

@@ -8,8 +8,9 @@ class Bar {
   Transition transition;
 
   static (int, int) tempoRange = (30, 220);
-  static (int, int) meterRange = (1, 99);
+  static (int, int) meterRange = (1, 64);
   static (int, int) repetitionsRange = (1, 99);
+  static (int, int) accentsRange = meterRange;
 
   Bar({
     required this.tempo,
@@ -47,6 +48,22 @@ class Bar {
 
   setRepetitions(int newRepetitions) {
     repetitions = newRepetitions.clamp(Bar.repetitionsRange.$1, Bar.repetitionsRange.$2);
+  }
+
+  setAccents(List<bool> newAccents) {
+    accents = newAccents;
+  }
+
+  int getAccentPosition() {
+    return accents.indexOf(true) + 1;
+  }
+
+  static List<bool> generateAccents(int length, int position) {
+    return List<bool>.generate(length, (int index) => index + 1 == position ? true : false, growable: false);
+  }
+
+  setTransition(Transition newTransition) {
+    transition = newTransition;
   }
 
   Map<String, dynamic> toJson() => {

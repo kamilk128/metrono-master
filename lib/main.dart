@@ -34,19 +34,14 @@ class MyAppState extends ChangeNotifier {
 
   List<Rhythm> exampleList = [
     Rhythm(name: "Trening 1", barList: [
-      Bar(tempo: 120, meter: (4, 4), repetitions: 3, accents: [true, false, false, false], transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 8, accents: [true, false, false, false], transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 4, accents: [true, false, false, false], transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: [true, false, false, false], transition: Transition.jump),
-      Bar(
-          tempo: 120,
-          meter: (6, 8),
-          repetitions: 2,
-          accents: [true, false, false, false, false, false],
-          transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: [true, false, false, false], transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: [true, false, false, false], transition: Transition.jump),
-      Bar(tempo: 140, meter: (3, 4), repetitions: 3, accents: [true, false, false], transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 3, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 8, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 4, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: Bar.generateAccents(6, 0), transition: Transition.jump),
+      Bar(tempo: 120, meter: (6, 8), repetitions: 2, accents: Bar.generateAccents(6, 1), transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: Bar.generateAccents(4, 2), transition: Transition.jump),
+      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: Bar.generateAccents(4, 3), transition: Transition.jump),
+      Bar(tempo: 140, meter: (3, 4), repetitions: 3, accents: Bar.generateAccents(3, 1), transition: Transition.jump),
     ])
   ];
 
