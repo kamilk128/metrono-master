@@ -7,27 +7,34 @@ class BarRow extends StatelessWidget {
     super.key,
     required this.index,
     required this.bar,
+    required this.previousBar,
     required this.onEditPressed,
     required this.onDeletePressed,
   });
 
   final int index;
   final Bar bar;
+  final Bar? previousBar;
   final VoidCallback onEditPressed;
   final VoidCallback onDeletePressed;
 
-  final Widget jump = SvgPicture.asset(
+  static SvgPicture jumpImage = SvgPicture.asset(
     "./assets/icons/jump.svg",
     semanticsLabel: 'jump',
-    height: 24,
-    width: 24,
+    height: 32,
+    width: 32,
   );
-  final Widget linear = SvgPicture.asset(
+  static SvgPicture linearImage = SvgPicture.asset(
     "./assets/icons/linear.svg",
     semanticsLabel: 'linear',
-    height: 24,
-    width: 24,
+    height: 32,
+    width: 32,
   );
+
+  final Widget jumpIncreaseIcon = jumpImage;
+  final Widget jumpDecreaseIcon = Transform.flip(flipX: true, child: jumpImage);
+  final Widget linearIncreaseIcon = linearImage;
+  final Widget linearDecreaseIcon = Transform.flip(flipX: true, child: linearImage);
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +43,24 @@ class BarRow extends StatelessWidget {
     final meterStyle = theme.textTheme.headlineSmall!.copyWith(height: 1.0);
 
     final transitionIcon = (() {
+      if (previousBar == null || bar.tempo == previousBar!.tempo) {
+        return const SizedBox(height: 32, width: 32);
+      }
       switch (bar.transition) {
         case Transition.jump:
-          return jump;
+          if (bar.tempo > previousBar!.tempo) {
+            return jumpIncreaseIcon;
+          } else {
+            return jumpDecreaseIcon;
+          }
         case Transition.linear:
-          return linear;
+          if (bar.tempo > previousBar!.tempo) {
+            return linearIncreaseIcon;
+          } else {
+            return linearDecreaseIcon;
+          }
         default:
-          return const Icon(Icons.help); // or any default value
+          return const Icon(Icons.help);
       }
     })();
 
