@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'models/bar.dart';
 import 'models/rhythm.dart';
 import 'screens/navigation.dart';
 import 'package:provider/provider.dart';
@@ -30,28 +29,46 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  var currentTraining = 0;
+  List<Rhythm> rythmList = [];
+  // List<Rhythm> rythmList = [
+  //   Rhythm(name: "Trening 1", barList: [
+  //     Bar(tempo: 120, meter: (4, 4), repetitions: 3, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
+  //     Bar(tempo: 120, meter: (4, 4), repetitions: 8, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
+  //     Bar(tempo: 120, meter: (4, 4), repetitions: 4, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
+  //     Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: Bar.generateAccents(6, 0), transition: Transition.jump),
+  //     Bar(tempo: 120, meter: (6, 8), repetitions: 2, accents: Bar.generateAccents(6, 1), transition: Transition.jump),
+  //     Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: Bar.generateAccents(4, 2), transition: Transition.jump),
+  //     Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: Bar.generateAccents(4, 3), transition: Transition.jump),
+  //     Bar(tempo: 140, meter: (3, 4), repetitions: 3, accents: Bar.generateAccents(3, 1), transition: Transition.jump),
+  //   ])
+  // ];
 
-  List<Rhythm> exampleList = [
-    Rhythm(name: "Trening 1", barList: [
-      Bar(tempo: 120, meter: (4, 4), repetitions: 3, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 8, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 4, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: Bar.generateAccents(6, 0), transition: Transition.jump),
-      Bar(tempo: 120, meter: (6, 8), repetitions: 2, accents: Bar.generateAccents(6, 1), transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: Bar.generateAccents(4, 2), transition: Transition.jump),
-      Bar(tempo: 120, meter: (4, 4), repetitions: 2, accents: Bar.generateAccents(4, 3), transition: Transition.jump),
-      Bar(tempo: 140, meter: (3, 4), repetitions: 3, accents: Bar.generateAccents(3, 1), transition: Transition.jump),
-    ])
-  ];
+  MyAppState() {
+    loadData();
+  }
+
+  loadData() {
+    load().then((value) {
+      rythmList = value;
+      notifyListeners();
+    });
+  }
+
+  saveData() {
+    save().then((value) => null);
+  }
 
   addNewRhythm() {
-    exampleList.add(Rhythm(name: 'Nowy rytm', barList: []));
+    rythmList.add(Rhythm(name: 'Nowy rytm', barList: []));
     notifyListeners();
   }
 
   deleteRhythm(Rhythm rhythm) {
-    exampleList.remove(rhythm);
+    rythmList.remove(rhythm);
+    notifyListeners();
+  }
+
+  refreshAppState() {
     notifyListeners();
   }
 
@@ -59,12 +76,11 @@ class MyAppState extends ChangeNotifier {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      String jsonString = jsonEncode(exampleList.map((rhythm) => rhythm.toJson()).toList());
+      String jsonString = jsonEncode(rythmList.map((rhythm) => rhythm.toJson()).toList());
 
       await prefs.setString('rhythmList', jsonString);
-    } catch (e) {
-      print('Error: $e');
-    }
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
   Future<List<Rhythm>> load() async {
@@ -78,14 +94,9 @@ class MyAppState extends ChangeNotifier {
         List<Rhythm> loadedList = jsonList.map((json) => Rhythm.fromJson(json)).toList();
         return loadedList;
       }
-    } catch (e) {
-      print('Error: $e');
-    }
+      // ignore: empty_catches
+    } catch (e) {}
 
     return []; // Return an empty list if there's an error or no data is found
-  }
-
-  refresh() {
-    notifyListeners();
   }
 }

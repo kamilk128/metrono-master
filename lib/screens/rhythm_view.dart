@@ -22,7 +22,8 @@ class _RhythmViewState extends State<RhythmView> {
     var rhythm = widget.rhythm;
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
-    TextEditingController nameController = TextEditingController(text: widget.rhythm.name);
+    String copiedRythmName = String.fromCharCodes(widget.rhythm.name.runes);
+    TextEditingController nameController = TextEditingController(text: copiedRythmName);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,13 +36,15 @@ class _RhythmViewState extends State<RhythmView> {
             controller: nameController,
             textAlign: TextAlign.center,
             onChanged: (value) {
-              widget.rhythm.name = value;
+              copiedRythmName = value;
             },
             onTapOutside: (value) {
-              appState.refresh();
+              appState.refreshAppState();
             },
             onSubmitted: (value) {
-              appState.refresh();
+              widget.rhythm.name = copiedRythmName;
+              appState.refreshAppState();
+              appState.saveData();
             },
             decoration: const InputDecoration(
               border: InputBorder.none,
@@ -65,6 +68,7 @@ class _RhythmViewState extends State<RhythmView> {
                   }
                   final Bar bar = rhythm.barList.removeAt(oldIndex);
                   rhythm.barList.insert(newIndex, bar);
+                  appState.saveData();
                 });
               },
               itemCount: rhythm.barList.length,
@@ -90,6 +94,7 @@ class _RhythmViewState extends State<RhythmView> {
                       onDeletePressed: () {
                         setState(() {
                           rhythm.barList.removeAt(index);
+                          appState.saveData();
                         });
                       },
                     ),

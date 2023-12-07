@@ -22,7 +22,6 @@ class EditBarView extends StatefulWidget {
 
 class _EditBarViewState extends State<EditBarView> {
   late Bar barCopy;
-  late bool isNew;
 
   @override
   void initState() {
@@ -55,267 +54,225 @@ class _EditBarViewState extends State<EditBarView> {
       appBar: AppBar(
         title: const Text('Edytuj takt'),
       ),
-      body: Column(
-        children: [
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.music_note,
-                color: Colors.black,
-                size: style.fontSize! / 2.0,
-              ),
-              Text("Tempo", style: headerStyle),
-              Icon(
-                Icons.music_note,
-                color: Colors.black,
-                size: style.fontSize! / 2.0,
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  controller: tempoController,
-                  onChanged: (value) {
-                    barCopy.setTempo(int.tryParse(value) ?? 100);
-                  },
-                  onTapOutside: (value) {
-                    setState(() {});
-                  },
-                  onSubmitted: (value) {
-                    setState(() {});
-                  },
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Wpisz tempo',
-                    hintStyle: headerStyle,
-                    contentPadding: const EdgeInsets.all(2),
-                  ),
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(Bar.tempoRange.$2.toString().length),
-                    FilteringTextInputFormatter.digitsOnly,
+      body: Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.music_note,
+                          color: Colors.black,
+                          size: style.fontSize! / 2.0,
+                        ),
+                        Text("Tempo", style: headerStyle),
+                        Icon(
+                          Icons.music_note,
+                          color: Colors.black,
+                          size: style.fontSize! / 2.0,
+                        ),
+                      ],
+                    ),
+                    TextField(
+                      textAlign: TextAlign.center,
+                      controller: tempoController,
+                      onChanged: (value) {
+                        barCopy.setTempo(int.tryParse(value) ?? 100);
+                      },
+                      onTapOutside: (value) {
+                        setState(() {});
+                      },
+                      onSubmitted: (value) {
+                        setState(() {});
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Wpisz tempo',
+                        hintStyle: headerStyle,
+                        contentPadding: const EdgeInsets.all(2),
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(Bar.tempoRange.$2.toString().length),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      style: style,
+                    ),
+                    const Divider(
+                      color: Colors.black,
+                      thickness: 1,
+                    ),
+                    Text("Metrum", style: headerStyle),
+                    TextField(
+                      textAlign: TextAlign.center,
+                      controller: meterTopController,
+                      onChanged: (value) {
+                        barCopy.setMeter((int.tryParse(value) ?? 4, barCopy.meter.$2));
+                      },
+                      onTapOutside: (value) {
+                        setState(() {});
+                      },
+                      onSubmitted: (value) {
+                        barCopy.setAccents(Bar.generateAccents(int.tryParse(value) ?? 4, barCopy.getAccentPosition()));
+                        setState(() {});
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Wpisz górne metrum',
+                        hintStyle: headerStyle,
+                        contentPadding: const EdgeInsets.all(2),
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(Bar.meterRange.$2.toString().length),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      style: style,
+                    ),
+                    Container(
+                      width: style.fontSize, // Adjust the percentage as needed
+                      height: 1.0, // Set the divider thickness
+                      color: Colors.black,
+                    ),
+                    TextField(
+                      textAlign: TextAlign.center,
+                      controller: meterBottomController,
+                      onChanged: (value) {
+                        barCopy.setMeter((barCopy.meter.$1, int.tryParse(value) ?? 4));
+                      },
+                      onTapOutside: (value) {
+                        setState(() {});
+                      },
+                      onSubmitted: (value) {
+                        setState(() {});
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Wpisz dolne metrum',
+                        hintStyle: headerStyle,
+                        contentPadding: const EdgeInsets.all(2),
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(Bar.meterRange.$2.toString().length),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      style: style,
+                    ),
+                    const Divider(
+                      color: Colors.black,
+                      thickness: 1,
+                    ),
+                    Text("Liczba powtórzeń", style: headerStyle),
+                    TextField(
+                      textAlign: TextAlign.center,
+                      controller: repetitionsController,
+                      onChanged: (value) {
+                        barCopy.setRepetitions(int.tryParse(value) ?? 1);
+                      },
+                      onTapOutside: (value) {
+                        setState(() {});
+                      },
+                      onSubmitted: (value) {
+                        setState(() {});
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Wpisz liczbę powtórzeń',
+                        hintStyle: headerStyle,
+                        contentPadding: const EdgeInsets.all(2),
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(Bar.repetitionsRange.$2.toString().length),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      style: style,
+                    ),
+                    const Divider(
+                      color: Colors.black,
+                      thickness: 1,
+                    ),
+                    Text("Pozycja akcentu", style: headerStyle),
+                    TextField(
+                      textAlign: TextAlign.center,
+                      controller: accentsController,
+                      onChanged: (value) {
+                        barCopy.setAccents(Bar.generateAccents(barCopy.meter.$1, int.tryParse(value) ?? 0));
+                      },
+                      onTapOutside: (value) {
+                        setState(() {});
+                      },
+                      onSubmitted: (value) {
+                        setState(() {});
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Wpisz pozycję akcentu',
+                        hintStyle: headerStyle,
+                        contentPadding: const EdgeInsets.all(2),
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(Bar.accentsRange.$2.toString().length),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      style: style,
+                    ),
+                    const Divider(
+                      color: Colors.black,
+                      thickness: 1,
+                    ),
+                    Text("Przejście", style: headerStyle),
+                    DropdownButton<Transition>(
+                      value: barCopy.transition,
+                      onChanged: (value) {
+                        setState(() {
+                          barCopy.setTransition(value!);
+                        });
+                      },
+                      items: [
+                        DropdownMenuItem(
+                          value: Transition.jump,
+                          child: Text('Skokowe', style: bodyStyle),
+                        ),
+                        DropdownMenuItem(
+                          value: Transition.linear,
+                          child: Text('Liniowe', style: bodyStyle),
+                        ),
+                      ],
+                    ),
+                    const Divider(
+                      color: Colors.black,
+                      thickness: 1,
+                    ),
                   ],
-                  style: style,
                 ),
               ),
-            ],
-          ),
-          const Divider(
-            color: Colors.black,
-            thickness: 1,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Metrum", style: headerStyle),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  controller: meterTopController,
-                  onChanged: (value) {
-                    barCopy.setMeter((int.tryParse(value) ?? 4, barCopy.meter.$2));
-                  },
-                  onTapOutside: (value) {
-                    setState(() {});
-                  },
-                  onSubmitted: (value) {
-                    barCopy.setAccents(Bar.generateAccents(int.tryParse(value) ?? 4, barCopy.getAccentPosition()));
-                    setState(() {});
-                  },
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Wpisz górne metrum',
-                    hintStyle: headerStyle,
-                    contentPadding: const EdgeInsets.all(2),
-                  ),
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(Bar.meterRange.$2.toString().length),
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  style: style,
-                ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (widget.bar == null) {
+                    widget.rhythm.barList.add(barCopy);
+                  } else {
+                    widget.bar!.setFromBar(barCopy);
+                  }
+                  appState.refreshAppState();
+                  appState.saveData();
+                  Navigator.pop(context);
+                },
+                child: const Text('Zapisz takt'),
               ),
-            ],
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.1, // Adjust the percentage as needed
-            height: 1.0, // Set the divider thickness
-            color: Colors.black,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  controller: meterBottomController,
-                  onChanged: (value) {
-                    barCopy.setMeter((barCopy.meter.$1, int.tryParse(value) ?? 4));
-                  },
-                  onTapOutside: (value) {
-                    setState(() {});
-                  },
-                  onSubmitted: (value) {
-                    setState(() {});
-                  },
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Wpisz dolne metrum',
-                    hintStyle: headerStyle,
-                    contentPadding: const EdgeInsets.all(2),
-                  ),
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(Bar.meterRange.$2.toString().length),
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  style: style,
-                ),
-              ),
-            ],
-          ),
-          const Divider(
-            color: Colors.black,
-            thickness: 1,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Liczba powtórzeń", style: headerStyle),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  controller: repetitionsController,
-                  onChanged: (value) {
-                    barCopy.setRepetitions(int.tryParse(value) ?? 1);
-                  },
-                  onTapOutside: (value) {
-                    setState(() {});
-                  },
-                  onSubmitted: (value) {
-                    setState(() {});
-                  },
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Wpisz liczbę powtórzeń',
-                    hintStyle: headerStyle,
-                    contentPadding: const EdgeInsets.all(2),
-                  ),
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(Bar.repetitionsRange.$2.toString().length),
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  style: style,
-                ),
-              ),
-            ],
-          ),
-          const Divider(
-            color: Colors.black,
-            thickness: 1,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Pozycja akcentu", style: headerStyle),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  controller: accentsController,
-                  onChanged: (value) {
-                    barCopy.setAccents(Bar.generateAccents(barCopy.meter.$1, int.tryParse(value) ?? 0));
-                  },
-                  onTapOutside: (value) {
-                    setState(() {});
-                  },
-                  onSubmitted: (value) {
-                    setState(() {});
-                  },
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Wpisz pozycję akcentu',
-                    hintStyle: headerStyle,
-                    contentPadding: const EdgeInsets.all(2),
-                  ),
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(Bar.accentsRange.$2.toString().length),
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  style: style,
-                ),
-              ),
-            ],
-          ),
-          const Divider(
-            color: Colors.black,
-            thickness: 1,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Przejście", style: headerStyle),
-            ],
-          ),
-          DropdownButton<Transition>(
-            value: barCopy.transition,
-            onChanged: (value) {
-              setState(() {
-                barCopy.setTransition(value!);
-              });
-            },
-            items: [
-              DropdownMenuItem(
-                value: Transition.jump,
-                child: Text('Skokowe', style: bodyStyle),
-              ),
-              DropdownMenuItem(
-                value: Transition.linear,
-                child: Text('Liniowe', style: bodyStyle),
-              ),
-            ],
-          ),
-          const Divider(
-            color: Colors.black,
-            thickness: 1,
-          ),
-          const Spacer(),
-          ElevatedButton(
-            onPressed: () {
-              if (widget.bar == null) {
-                widget.rhythm.barList.add(barCopy);
-              } else {
-                widget.bar!.setFromBar(barCopy);
-              }
-              appState.refresh();
-              Navigator.pop(context);
-            },
-            child: const Text('Zapisz takt'),
-          ),
-          const Spacer(),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

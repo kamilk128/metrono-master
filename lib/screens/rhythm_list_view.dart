@@ -16,7 +16,7 @@ class _RhythmListViewState extends State<RhythmListView> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var rhythmList = appState.exampleList;
+    var rhythmList = appState.rythmList;
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
 
@@ -43,6 +43,7 @@ class _RhythmListViewState extends State<RhythmListView> {
                     onDeletePressed: () {
                       setState(() {
                         appState.deleteRhythm(rhythmList[index]);
+                        appState.saveData();
                       });
                     },
                   ),
@@ -61,26 +62,6 @@ class _RhythmListViewState extends State<RhythmListView> {
             side: const BorderSide(width: 1, color: Colors.grey),
           ),
           child: Icon(Icons.add, color: Colors.black, size: style.fontSize),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            appState.save().then((value) => null);
-          },
-          style: ElevatedButton.styleFrom(
-            side: const BorderSide(width: 1, color: Colors.grey),
-          ),
-          child: const Text("Zapisz rytmy na urządzeniu"),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              appState.load().then((value) => {appState.exampleList = value});
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            side: const BorderSide(width: 1, color: Colors.grey),
-          ),
-          child: const Text("Wczytaj rytmy z urządzenia"),
         ),
       ]),
     );
