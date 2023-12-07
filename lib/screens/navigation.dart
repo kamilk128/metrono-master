@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrono_master/screens/metronome_v2.dart';
 import 'package:metrono_master/screens/rhythm_list_view.dart';
 import 'metronome.dart';
 
@@ -22,6 +23,9 @@ class _NavigationPageState extends State<NavigationPage> {
         page = const MetronomeControl();
         break;
       case 1:
+        page = const MetronomeV2();
+        break;
+      case 2:
         page = const RhythmListView();
         break;
       default:
@@ -44,6 +48,10 @@ class _NavigationPageState extends State<NavigationPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.play_arrow),
             label: 'Metronom',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.play_arrow),
+            label: 'Metronom2',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.queue_music),
