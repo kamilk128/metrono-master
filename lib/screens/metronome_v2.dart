@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:metrono_master/custom_timer.dart';
@@ -58,12 +60,13 @@ class _MetronomeV2State extends State<MetronomeV2> {
                 pause = true;
               });
             },
-            items: appState.rythmList.map((rhythm) {
-              return DropdownMenuItem<Rhythm>(
-                value: rhythm,
-                child: Text(rhythm.name, style: style), // Adjust style as needed
-              );
-            }).toList(),
+            items: appState.rythmList
+                .where((rhythm) => rhythm.barList.isNotEmpty)
+                .map((rhythm) => DropdownMenuItem<Rhythm>(
+                      value: rhythm,
+                      child: Text(rhythm.name, style: style),
+                    ))
+                .toList(),
           ),
           const Spacer(),
           Row(
@@ -86,9 +89,23 @@ class _MetronomeV2State extends State<MetronomeV2> {
                   Text('${currentBar!.meter.$1}', style: headerStyle),
                   Text('${currentBar!.meter.$2}', style: headerStyle),
                 ],
-              )
+              ),
             ],
           ),
+          const Spacer(),
+          for (int j = 0; j < currentBar!.meter.$1; j += min(currentBar!.meter.$2, 8))
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              for (int i = 0; i < min(currentBar!.meter.$2, 8) && i + j < currentBar!.meter.$1; i++)
+                Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: Container(
+                        width: currentBar!.accents[i + j] ? 45.0 : 30.0,
+                        height: currentBar!.accents[i + j] ? 45.0 : 30.0,
+                        decoration: const BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                        )))
+            ]),
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

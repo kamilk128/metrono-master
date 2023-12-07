@@ -85,7 +85,7 @@ class BarRow extends StatelessWidget {
           direction: Axis.vertical,
           spacing: -5,
           children: [
-            Text('>', style: meterStyle),
+            Text(bar.getAccentPosition() > 9 ? ' >' : '>', style: meterStyle),
             Text('${bar.getAccentPosition()}', style: meterStyle),
           ],
         ),
