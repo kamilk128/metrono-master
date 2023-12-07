@@ -29,7 +29,7 @@ class _EditBarViewState extends State<EditBarView> {
 
     if (widget.bar == null) {
       barCopy = Bar(
-          tempo: 100, meter: (4, 4), repetitions: 1, accents: Bar.generateAccents(4, 0), transition: Transition.jump);
+          tempo: 120, meter: (4, 4), repetitions: 1, accents: Bar.generateAccents(4, 1), transition: Transition.jump);
     } else {
       barCopy = Bar.fromBar(widget.bar!);
     }
@@ -118,7 +118,6 @@ class _EditBarViewState extends State<EditBarView> {
                         setState(() {});
                       },
                       onSubmitted: (value) {
-                        barCopy.setAccents(Bar.generateAccents(int.tryParse(value) ?? 4, barCopy.getAccentPosition()));
                         setState(() {});
                       },
                       keyboardType: TextInputType.number,
@@ -259,6 +258,7 @@ class _EditBarViewState extends State<EditBarView> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                  barCopy.setAccents(Bar.generateAccents(barCopy.meter.$1, barCopy.getAccentPosition()));
                   if (widget.bar == null) {
                     widget.rhythm.barList.add(barCopy);
                   } else {

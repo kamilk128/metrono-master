@@ -59,7 +59,9 @@ class Bar {
   }
 
   static List<bool> generateAccents(int length, int position) {
-    return List<bool>.generate(length, (int index) => index + 1 == position ? true : false, growable: false);
+    return List<bool>.generate(
+        length, (int index) => index + 1 == position || (index + 1 == length && position > length) ? true : false,
+        growable: false);
   }
 
   setTransition(Transition newTransition) {
