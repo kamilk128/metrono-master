@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:metrono_master/custom_timer.dart';
 import 'package:provider/provider.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../main.dart';
 import '../models/bar.dart';
@@ -17,13 +17,25 @@ class MetronomeV2 extends StatefulWidget {
 }
 
 class _MetronomeV2State extends State<MetronomeV2> {
-  Rhythm? currentRythm;
+  Rhythm? currentRhythm;
   Bar? currentBar;
+  int currentNote = 0;
   bool pause = true;
+  bool tick = false;
   CustomTimer? tickTimer;
 
-  void onTick() {
-    SystemSound.play(SystemSoundType.click);
+  final player = AudioPlayer();
+
+  Future<void> onTick() async {
+    await player.setUrl('asset:./assets/sounds/Synth_Square_E_${currentBar!.accents[currentNote] ? 'hi' : 'lo'}.wav');
+    player.play();
+    tick = true;
+    setState(() {});
+    Future.delayed(const Duration(milliseconds: 100), () {
+      tick = false;
+      currentNote = (currentNote + 1) % currentBar!.meter.$1;
+      setState(() {});
+    });
   }
 
   @override
@@ -41,26 +53,30 @@ class _MetronomeV2State extends State<MetronomeV2> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    currentRythm ??= appState.rythmList[0];
-    currentBar ??= currentRythm!.barList[0];
+    currentRhythm ??= appState.rhythmList[0];
+    currentBar ??= currentRhythm!.barList[0];
+
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
     final headerStyle = theme.textTheme.titleLarge!.copyWith();
+    final bodyStyle = theme.textTheme.bodyLarge!.copyWith();
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
           DropdownButton<Rhythm>(
-            value: currentRythm,
+            value: currentRhythm,
             onChanged: (value) {
               setState(() {
-                currentRythm = value!;
-                currentBar = currentRythm!.barList[0];
-                tickTimer!.changeTempo(currentBar!.tempo);
+                currentRhythm = value!;
+                currentBar = currentRhythm!.barList[0];
+                currentNote = 0;
+                tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
                 pause = true;
               });
             },
-            items: appState.rythmList
+            items: appState.rhythmList
                 .where((rhythm) => rhythm.barList.isNotEmpty)
                 .map((rhythm) => DropdownMenuItem<Rhythm>(
                       value: rhythm,
@@ -71,10 +87,11 @@ class _MetronomeV2State extends State<MetronomeV2> {
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
                 children: [
-                  Text("Aktualne tempo", style: headerStyle),
+                  Text("Aktualne tempo", style: bodyStyle),
                   Row(
                     children: [
                       Icon(Icons.music_note, color: Colors.black, size: style.fontSize),
@@ -83,9 +100,12 @@ class _MetronomeV2State extends State<MetronomeV2> {
                   ),
                 ],
               ),
-              Column(
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                direction: Axis.vertical,
+                spacing: -5,
                 children: [
-                  Text("Aktualne metrum", style: headerStyle),
+                  Text("Aktualne metrum", style: bodyStyle),
                   Text('${currentBar!.meter.$1}', style: headerStyle),
                   Text('${currentBar!.meter.$2}', style: headerStyle),
                 ],
@@ -101,8 +121,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
                     child: Container(
                         width: currentBar!.accents[i + j] ? 45.0 : 30.0,
                         height: currentBar!.accents[i + j] ? 45.0 : 30.0,
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
+                        decoration: BoxDecoration(
+                          color: i + j == currentNote && tick ? Colors.teal : Colors.grey,
                           shape: BoxShape.circle,
                         )))
             ]),
@@ -112,13 +132,13 @@ class _MetronomeV2State extends State<MetronomeV2> {
             children: [
               Column(
                 children: [
-                  Text(pause ? "Play" : "Stop", style: headerStyle),
+                  Text(pause ? "Start" : "Stop", style: headerStyle),
                   IconButton(
                     icon: Icon(pause ? Icons.play_arrow : Icons.pause, size: style.fontSize! * 2),
                     onPressed: () {
                       setState(() {
                         pause = !pause;
-                        tickTimer!.changeTempo(currentBar!.tempo);
+                        tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
                         pause ? tickTimer!.stopTimer() : tickTimer!.startTimer();
                       });
                     },
@@ -132,6 +152,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
                     icon: Icon(Icons.restart_alt, size: style.fontSize! * 2),
                     onPressed: () {
                       setState(() {
+                        currentNote = 0;
+                        tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
                         tickTimer!.startTimer();
                         pause = false;
                       });
