@@ -22,8 +22,8 @@ class _RhythmViewState extends State<RhythmView> {
     var rhythm = widget.rhythm;
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
-    String copiedRythmName = String.fromCharCodes(widget.rhythm.name.runes);
-    TextEditingController nameController = TextEditingController(text: copiedRythmName);
+    String copiedRhythmName = String.fromCharCodes(widget.rhythm.name.runes);
+    TextEditingController nameController = TextEditingController(text: copiedRhythmName);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,13 +36,13 @@ class _RhythmViewState extends State<RhythmView> {
             controller: nameController,
             textAlign: TextAlign.center,
             onChanged: (value) {
-              copiedRythmName = value;
+              copiedRhythmName = value;
             },
             onTapOutside: (value) {
               appState.refreshAppState();
             },
             onSubmitted: (value) {
-              widget.rhythm.name = copiedRythmName;
+              widget.rhythm.name = copiedRhythmName;
               appState.refreshAppState();
               appState.saveData();
             },

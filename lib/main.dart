@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  List<Rhythm> rythmList = [];
-  // List<Rhythm> rythmList = [
+  List<Rhythm> rhythmList = [];
+  // List<Rhythm> rhythmList = [
   //   Rhythm(name: "Trening 1", barList: [
   //     Bar(tempo: 120, meter: (4, 4), repetitions: 3, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
   //     Bar(tempo: 120, meter: (4, 4), repetitions: 8, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
@@ -49,7 +49,7 @@ class MyAppState extends ChangeNotifier {
 
   loadData() {
     load().then((value) {
-      rythmList = value;
+      rhythmList = value;
       notifyListeners();
     });
   }
@@ -59,12 +59,12 @@ class MyAppState extends ChangeNotifier {
   }
 
   addNewRhythm() {
-    rythmList.add(Rhythm(name: 'Nowy rytm', barList: []));
+    rhythmList.add(Rhythm(name: 'Nowy rytm', barList: []));
     notifyListeners();
   }
 
   deleteRhythm(Rhythm rhythm) {
-    rythmList.remove(rhythm);
+    rhythmList.remove(rhythm);
     notifyListeners();
   }
 
@@ -76,7 +76,7 @@ class MyAppState extends ChangeNotifier {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      String jsonString = jsonEncode(rythmList.map((rhythm) => rhythm.toJson()).toList());
+      String jsonString = jsonEncode(rhythmList.map((rhythm) => rhythm.toJson()).toList());
 
       await prefs.setString('rhythmList', jsonString);
       // ignore: empty_catches

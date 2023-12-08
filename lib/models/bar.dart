@@ -7,10 +7,11 @@ class Bar {
   List<bool> accents;
   Transition transition;
 
-  static (int, int) tempoRange = (30, 220);
-  static (int, int) meterRange = (1, 64);
+  static (int, int) tempoRange = (30, 250);
+  static (int, int) meterTopRange = (1, 64);
+  static (int, int) meterBottomRange = (1, 16);
   static (int, int) repetitionsRange = (1, 99);
-  static (int, int) accentsRange = meterRange;
+  static (int, int) accentsRange = meterTopRange;
 
   Bar({
     required this.tempo,
@@ -41,8 +42,8 @@ class Bar {
 
   setMeter((int, int) newMeter) {
     meter = (
-      newMeter.$1.clamp(Bar.meterRange.$1, Bar.meterRange.$2),
-      newMeter.$2.clamp(Bar.meterRange.$1, Bar.meterRange.$2)
+      newMeter.$1.clamp(Bar.meterTopRange.$1, Bar.meterTopRange.$2),
+      newMeter.$2.clamp(Bar.meterBottomRange.$1, Bar.meterBottomRange.$2)
     );
   }
 

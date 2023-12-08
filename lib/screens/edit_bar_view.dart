@@ -128,7 +128,7 @@ class _EditBarViewState extends State<EditBarView> {
                         contentPadding: const EdgeInsets.all(2),
                       ),
                       inputFormatters: [
-                        LengthLimitingTextInputFormatter(Bar.meterRange.$2.toString().length),
+                        LengthLimitingTextInputFormatter(Bar.meterTopRange.$2.toString().length),
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       style: style,
@@ -158,7 +158,7 @@ class _EditBarViewState extends State<EditBarView> {
                         contentPadding: const EdgeInsets.all(2),
                       ),
                       inputFormatters: [
-                        LengthLimitingTextInputFormatter(Bar.meterRange.$2.toString().length),
+                        LengthLimitingTextInputFormatter(Bar.meterBottomRange.$2.toString().length),
                         FilteringTextInputFormatter.digitsOnly,
                       ],
                       style: style,

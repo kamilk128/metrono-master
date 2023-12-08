@@ -2,14 +2,13 @@ import 'dart:async';
 
 class CustomTimer {
   late Timer _timer;
-  late Function() _callback;
+  late final Function() _callback;
   late Duration _waitTime;
   bool _isActive = false;
 
-  CustomTimer(Duration waitTime, Function() callback) {
-    _waitTime = waitTime;
-    _callback = callback;
-  }
+  CustomTimer(Duration waitTime, Function() callback)
+      : _waitTime = waitTime,
+        _callback = callback;
 
   void startTimer() {
     stopTimer();
@@ -32,9 +31,9 @@ class CustomTimer {
     startTimer();
   }
 
-  void changeTempo(int tempo, {bool restart = false}) {
+  void changeTempo(int tempo, int noteType, {bool restart = false}) {
     stopTimer();
-    _waitTime = Duration(milliseconds: 1000 ~/ (tempo / 60));
+    _waitTime = Duration(milliseconds: 1000 ~/ ((tempo / 60) * (noteType / 4)));
     restart ? startTimer() : null;
   }
 }
