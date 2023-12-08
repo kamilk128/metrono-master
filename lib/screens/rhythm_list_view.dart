@@ -17,6 +17,7 @@ class _RhythmListViewState extends State<RhythmListView> {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var rhythmList = appState.rhythmList;
+
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
 

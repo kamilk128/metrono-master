@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:metrono_master/custom_timer.dart';
+import 'package:metrono_master/screens/rhythm_list_view.dart';
 import 'package:provider/provider.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -53,8 +54,13 @@ class _MetronomeV2State extends State<MetronomeV2> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    currentRhythm ??= appState.rhythmList[0];
-    currentBar ??= currentRhythm!.barList[0];
+    var rhythmList = appState.rhythmList.where((rhythm) => rhythm.barList.isNotEmpty).toList();
+    if (rhythmList.isEmpty) {
+      return const RhythmListView();
+    } else {
+      currentRhythm ??= rhythmList[0];
+      currentBar ??= currentRhythm!.barList[0];
+    }
 
     final theme = Theme.of(context);
     final style = theme.textTheme.displaySmall!.copyWith();
