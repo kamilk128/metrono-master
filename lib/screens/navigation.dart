@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:metrono_master/screens/metronome_v2.dart';
 import 'package:metrono_master/screens/rhythm_list_view.dart';
+import 'package:metrono_master/screens/settings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'metronome.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -28,6 +30,9 @@ class _NavigationPageState extends State<NavigationPage> {
       case 2:
         page = const RhythmListView();
         break;
+      case 3:
+        page = const Settings();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -43,24 +48,29 @@ class _NavigationPageState extends State<NavigationPage> {
         child: page,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         backgroundColor: theme.colorScheme.primary,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.play_arrow),
-            label: 'Metronom',
+            label: AppLocalizations.of(context)!.metronome,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.play_arrow),
-            label: 'Metronom2',
+            label: AppLocalizations.of(context)!.metronome,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.queue_music),
-            label: 'Lista Rytmów',
+            label: AppLocalizations.of(context)!.rhythmList,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: AppLocalizations.of(context)!.settings,
           ),
         ],
         currentIndex: selectedIndex,
-        unselectedItemColor: theme.colorScheme.onTertiary,
-        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: theme.colorScheme.onPrimary,
+        selectedItemColor: theme.colorScheme.secondary,
         onTap: onItemTapped,
       ),
     );

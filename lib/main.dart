@@ -3,9 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'models/rhythm.dart';
+import 'models/themes.dart';
 import 'screens/navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() => runApp(const MyApp());
 
@@ -16,20 +18,32 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'MetronoMaster',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
-          useMaterial3: true,
-        ),
-        home: Scaffold(appBar: AppBar(title: const Text("MetronoMaster")), body: const NavigationPage()),
-      ),
+      builder: (context, _) {
+        final provider = Provider.of<MyAppState>(context);
+        return MaterialApp(
+          title: 'MetronoMaster',
+          theme: Themes.lightTheme,
+          darkTheme: Themes.darkTheme,
+          themeMode: provider.themeMode,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale(provider.activeLanguage),
+          home: const SafeArea(
+            child: Scaffold(
+              body: NavigationPage(),
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
 class MyAppState extends ChangeNotifier {
+  ThemeMode themeMode = ThemeMode.dark;
+  String activeLanguage = 'pl';
   List<Rhythm> rhythmList = [];
+  List<String> languages = ['pl', 'en', 'es'];
   // List<Rhythm> rhythmList = [
   //   Rhythm(name: "Trening 1", barList: [
   //     Bar(tempo: 120, meter: (4, 4), repetitions: 3, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
@@ -47,6 +61,18 @@ class MyAppState extends ChangeNotifier {
     loadData();
   }
 
+  toggleTheme(bool isOn) {
+    themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
+
+    notifyListeners();
+  }
+
+  setLanguage(String language) {
+    activeLanguage = language;
+
+    notifyListeners();
+  }
+
   loadData() {
     load().then((value) {
       rhythmList = value;
@@ -58,8 +84,8 @@ class MyAppState extends ChangeNotifier {
     save().then((value) => null);
   }
 
-  addNewRhythm() {
-    rhythmList.add(Rhythm(name: 'Nowy rytm', barList: []));
+  addNewRhythm(String rhythmName) {
+    rhythmList.add(Rhythm(name: rhythmName, barList: []));
     notifyListeners();
   }
 
