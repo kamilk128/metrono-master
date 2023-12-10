@@ -5,6 +5,7 @@ import 'package:metrono_master/custom_timer.dart';
 import 'package:metrono_master/screens/rhythm_list_view.dart';
 import 'package:provider/provider.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../main.dart';
 import '../models/bar.dart';
@@ -63,15 +64,17 @@ class _MetronomeV2State extends State<MetronomeV2> {
     }
 
     final theme = Theme.of(context);
-    final style = theme.textTheme.displaySmall!.copyWith();
-    final headerStyle = theme.textTheme.titleLarge!.copyWith();
-    final bodyStyle = theme.textTheme.bodyLarge!.copyWith();
+    final style = theme.textTheme.displaySmall!.copyWith(color: theme.colorScheme.onBackground);
+    final headerStyle = theme.textTheme.titleLarge!.copyWith(color: theme.colorScheme.onBackground);
+    final bodyStyle = theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onBackground);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           DropdownButton<Rhythm>(
+            isExpanded: true,
             value: currentRhythm,
             onChanged: (value) {
               setState(() {
@@ -89,6 +92,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
                       child: Text(rhythm.name, style: style),
                     ))
                 .toList(),
+            underline: Container(),
           ),
           const Spacer(),
           Row(
@@ -97,10 +101,10 @@ class _MetronomeV2State extends State<MetronomeV2> {
             children: [
               Column(
                 children: [
-                  Text("Aktualne tempo", style: bodyStyle),
+                  Text(AppLocalizations.of(context)!.tempo, style: bodyStyle),
                   Row(
                     children: [
-                      Icon(Icons.music_note, color: Colors.black, size: style.fontSize),
+                      Icon(Icons.music_note, size: style.fontSize),
                       Text('=${currentBar!.tempo}', style: style),
                     ],
                   ),
@@ -111,7 +115,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
                 direction: Axis.vertical,
                 spacing: -5,
                 children: [
-                  Text("Aktualne metrum", style: bodyStyle),
+                  Text(AppLocalizations.of(context)!.meter, style: bodyStyle),
                   Text('${currentBar!.meter.$1}', style: headerStyle),
                   Text('${currentBar!.meter.$2}', style: headerStyle),
                 ],
@@ -128,7 +132,9 @@ class _MetronomeV2State extends State<MetronomeV2> {
                         width: currentBar!.accents[i + j] ? 45.0 : 30.0,
                         height: currentBar!.accents[i + j] ? 45.0 : 30.0,
                         decoration: BoxDecoration(
-                          color: i + j == currentNote && tick ? Colors.teal : Colors.grey,
+                          color: i + j == currentNote && tick
+                              ? theme.colorScheme.secondary
+                              : theme.colorScheme.onSecondary,
                           shape: BoxShape.circle,
                         )))
             ]),
@@ -138,9 +144,11 @@ class _MetronomeV2State extends State<MetronomeV2> {
             children: [
               Column(
                 children: [
-                  Text(pause ? "Start" : "Stop", style: headerStyle),
+                  Text(pause ? AppLocalizations.of(context)!.start : AppLocalizations.of(context)!.stop,
+                      style: headerStyle),
                   IconButton(
                     icon: Icon(pause ? Icons.play_arrow : Icons.pause, size: style.fontSize! * 2),
+                    color: theme.colorScheme.onBackground,
                     onPressed: () {
                       setState(() {
                         pause = !pause;
@@ -153,9 +161,13 @@ class _MetronomeV2State extends State<MetronomeV2> {
               ),
               Column(
                 children: [
-                  Text("Restart", style: headerStyle),
+                  Text(AppLocalizations.of(context)!.restart, style: headerStyle),
                   IconButton(
-                    icon: Icon(Icons.restart_alt, size: style.fontSize! * 2),
+                    icon: Icon(
+                      Icons.restart_alt,
+                      size: style.fontSize! * 2,
+                      color: theme.colorScheme.onBackground,
+                    ),
                     onPressed: () {
                       setState(() {
                         currentNote = 0;
@@ -164,7 +176,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
                         pause = false;
                       });
                     },
-                  ),
+                  )
                 ],
               ),
             ],

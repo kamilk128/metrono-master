@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrono_master/widgets/rhythm_row.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../main.dart';
 import 'rhythm_view.dart';
@@ -53,16 +54,16 @@ class _RhythmListViewState extends State<RhythmListView> {
             },
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              appState.addNewRhythm();
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            side: const BorderSide(width: 1, color: Colors.grey),
+        Container(
+          margin: const EdgeInsets.only(bottom: 10.0),
+          child: ElevatedButton(
+            onPressed: () {
+              setState(() {
+                appState.addNewRhythm(AppLocalizations.of(context)!.newRhythm);
+              });
+            },
+            child: Icon(Icons.add, color: style.color, size: style.fontSize),
           ),
-          child: Icon(Icons.add, color: Colors.black, size: style.fontSize),
         ),
       ]),
     );

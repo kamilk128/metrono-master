@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:metrono_master/main.dart';
 import 'package:metrono_master/models/rhythm.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bar.dart';
@@ -40,9 +41,9 @@ class _EditBarViewState extends State<EditBarView> {
     var appState = context.watch<MyAppState>();
 
     final theme = Theme.of(context);
-    final style = theme.textTheme.displaySmall!.copyWith();
-    final headerStyle = theme.textTheme.headlineSmall!.copyWith();
-    final bodyStyle = theme.textTheme.bodyLarge!.copyWith();
+    final style = theme.textTheme.displaySmall!.copyWith(color: theme.colorScheme.onBackground);
+    final headerStyle = theme.textTheme.headlineSmall!.copyWith(color: theme.colorScheme.onBackground);
+    final bodyStyle = theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onBackground);
 
     TextEditingController tempoController = TextEditingController(text: barCopy.tempo.toString());
     TextEditingController meterTopController = TextEditingController(text: barCopy.meter.$1.toString());
@@ -52,7 +53,7 @@ class _EditBarViewState extends State<EditBarView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edytuj takt'),
+        title: Text(AppLocalizations.of(context)!.editTact),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -67,13 +68,11 @@ class _EditBarViewState extends State<EditBarView> {
                       children: [
                         Icon(
                           Icons.music_note,
-                          color: Colors.black,
                           size: style.fontSize! / 2.0,
                         ),
-                        Text("Tempo", style: headerStyle),
+                        Text(AppLocalizations.of(context)!.tempo, style: headerStyle),
                         Icon(
                           Icons.music_note,
-                          color: Colors.black,
                           size: style.fontSize! / 2.0,
                         ),
                       ],
@@ -93,7 +92,7 @@ class _EditBarViewState extends State<EditBarView> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Wpisz tempo',
+                        hintText: AppLocalizations.of(context)!.enterTempo,
                         hintStyle: headerStyle,
                         contentPadding: const EdgeInsets.all(2),
                       ),
@@ -103,11 +102,12 @@ class _EditBarViewState extends State<EditBarView> {
                       ],
                       style: style,
                     ),
-                    const Divider(
-                      color: Colors.black,
+                    Divider(
+                      color: theme.primaryColor,
+                      // color: Color.fromARGB(255, 44, 44, 44),
                       thickness: 1,
                     ),
-                    Text("Metrum", style: headerStyle),
+                    Text(AppLocalizations.of(context)!.meter, style: headerStyle),
                     TextField(
                       textAlign: TextAlign.center,
                       controller: meterTopController,
@@ -123,7 +123,7 @@ class _EditBarViewState extends State<EditBarView> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Wpisz górne metrum',
+                        hintText: AppLocalizations.of(context)!.enterUpperMetro,
                         hintStyle: headerStyle,
                         contentPadding: const EdgeInsets.all(2),
                       ),
@@ -136,7 +136,7 @@ class _EditBarViewState extends State<EditBarView> {
                     Container(
                       width: style.fontSize, // Adjust the percentage as needed
                       height: 1.0, // Set the divider thickness
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                     TextField(
                       textAlign: TextAlign.center,
@@ -153,7 +153,7 @@ class _EditBarViewState extends State<EditBarView> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Wpisz dolne metrum',
+                        hintText: AppLocalizations.of(context)!.enterLowerMetro,
                         hintStyle: headerStyle,
                         contentPadding: const EdgeInsets.all(2),
                       ),
@@ -163,11 +163,11 @@ class _EditBarViewState extends State<EditBarView> {
                       ],
                       style: style,
                     ),
-                    const Divider(
-                      color: Colors.black,
+                    Divider(
+                      color: theme.primaryColor,
                       thickness: 1,
                     ),
-                    Text("Liczba powtórzeń", style: headerStyle),
+                    Text(AppLocalizations.of(context)!.numberOfRepeats, style: headerStyle),
                     TextField(
                       textAlign: TextAlign.center,
                       controller: repetitionsController,
@@ -183,7 +183,7 @@ class _EditBarViewState extends State<EditBarView> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Wpisz liczbę powtórzeń',
+                        hintText: AppLocalizations.of(context)!.enterNumberOfRepeats,
                         hintStyle: headerStyle,
                         contentPadding: const EdgeInsets.all(2),
                       ),
@@ -193,11 +193,11 @@ class _EditBarViewState extends State<EditBarView> {
                       ],
                       style: style,
                     ),
-                    const Divider(
-                      color: Colors.black,
+                    Divider(
+                      color: theme.primaryColor,
                       thickness: 1,
                     ),
-                    Text("Pozycja akcentu", style: headerStyle),
+                    Text(AppLocalizations.of(context)!.accentPosition, style: headerStyle),
                     TextField(
                       textAlign: TextAlign.center,
                       controller: accentsController,
@@ -213,7 +213,7 @@ class _EditBarViewState extends State<EditBarView> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Wpisz pozycję akcentu',
+                        hintText: AppLocalizations.of(context)!.enterAccentPosition,
                         hintStyle: headerStyle,
                         contentPadding: const EdgeInsets.all(2),
                       ),
@@ -223,11 +223,11 @@ class _EditBarViewState extends State<EditBarView> {
                       ],
                       style: style,
                     ),
-                    const Divider(
-                      color: Colors.black,
+                    Divider(
+                      color: theme.primaryColor,
                       thickness: 1,
                     ),
-                    Text("Przejście", style: headerStyle),
+                    Text(AppLocalizations.of(context)!.transition, style: headerStyle),
                     DropdownButton<Transition>(
                       value: barCopy.transition,
                       onChanged: (value) {
@@ -238,16 +238,17 @@ class _EditBarViewState extends State<EditBarView> {
                       items: [
                         DropdownMenuItem(
                           value: Transition.jump,
-                          child: Text('Skokowe', style: bodyStyle),
+                          child: Text(AppLocalizations.of(context)!.jumping, style: bodyStyle),
                         ),
                         DropdownMenuItem(
                           value: Transition.linear,
-                          child: Text('Liniowe', style: bodyStyle),
+                          child: Text(AppLocalizations.of(context)!.linear, style: bodyStyle),
                         ),
                       ],
+                      underline: Container(),
                     ),
-                    const Divider(
-                      color: Colors.black,
+                    Divider(
+                      color: theme.primaryColor,
                       thickness: 1,
                     ),
                   ],
@@ -268,7 +269,7 @@ class _EditBarViewState extends State<EditBarView> {
                   appState.saveData();
                   Navigator.pop(context);
                 },
-                child: const Text('Zapisz takt'),
+                child: Text(AppLocalizations.of(context)!.saveTact, style: bodyStyle),
               ),
             ),
           ],

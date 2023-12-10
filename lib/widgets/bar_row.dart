@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrono_master/models/bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BarRow extends StatelessWidget {
   BarRow({
@@ -39,8 +40,8 @@ class BarRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.displaySmall!.copyWith(fontSize: 32.0);
-    final meterStyle = theme.textTheme.headlineSmall!.copyWith(height: 1.0);
+    final style = theme.textTheme.displaySmall!.copyWith(fontSize: 32.0, color: theme.colorScheme.onBackground);
+    final meterStyle = theme.textTheme.headlineSmall!.copyWith(height: 1.0, color: theme.colorScheme.onBackground);
 
     final transitionIcon = (() {
       if (previousBar == null || bar.tempo == previousBar!.tempo) {
@@ -69,7 +70,7 @@ class BarRow extends StatelessWidget {
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text('${index + 1}.', style: style),
         const Spacer(),
-        Icon(Icons.music_note, color: Colors.black, size: style.fontSize),
+        Icon(Icons.music_note, color: style.color, size: style.fontSize),
         Text('=${bar.tempo}', style: style),
         const Spacer(),
         Column(
@@ -106,23 +107,29 @@ class BarRow extends StatelessWidget {
             }
           },
           itemBuilder: (BuildContext context) => [
-            const PopupMenuItem<String>(
+            PopupMenuItem<String>(
               value: 'edit',
               child: Row(
                 children: [
-                  Icon(Icons.edit),
-                  SizedBox(width: 8.0),
-                  Text('Edytuj'),
+                  Icon(
+                    Icons.edit,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(AppLocalizations.of(context)!.edit),
                 ],
               ),
             ),
-            const PopupMenuItem<String>(
+            PopupMenuItem<String>(
               value: 'delete',
               child: Row(
                 children: [
-                  Icon(Icons.delete),
-                  SizedBox(width: 8.0),
-                  Text('Usuń'),
+                  Icon(
+                    Icons.delete,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(AppLocalizations.of(context)!.delete),
                 ],
               ),
             ),

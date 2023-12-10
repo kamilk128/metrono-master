@@ -17,7 +17,7 @@ class RhythmRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.displaySmall!.copyWith(fontSize: 32.0);
+    final style = theme.textTheme.displaySmall!.copyWith(fontSize: 32.0, color: theme.colorScheme.onBackground);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -28,13 +28,13 @@ class RhythmRow extends StatelessWidget {
           onPressed: () {
             onEditPressed();
           },
-          child: Icon(Icons.edit, color: Colors.black, size: style.fontSize),
+          child: Icon(Icons.edit, color: theme.colorScheme.onSurface, size: style.fontSize),
         ),
         ElevatedButton(
           onPressed: () {
             onDeletePressed();
           },
-          child: Icon(Icons.delete, color: Colors.black, size: style.fontSize),
+          child: Icon(Icons.delete, color: theme.colorScheme.onSurface, size: style.fontSize),
         ),
       ]),
     );

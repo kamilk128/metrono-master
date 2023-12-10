@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:metrono_master/models/rhythm.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../models/bar.dart';
@@ -21,13 +22,14 @@ class _RhythmViewState extends State<RhythmView> {
     var appState = context.watch<MyAppState>();
     var rhythm = widget.rhythm;
     final theme = Theme.of(context);
-    final style = theme.textTheme.displaySmall!.copyWith();
+    final style = theme.textTheme.displaySmall!.copyWith(color: theme.colorScheme.onBackground);
+    final bodyStyle = theme.textTheme.bodyLarge!.copyWith();
     String copiedRhythmName = String.fromCharCodes(widget.rhythm.name.runes);
     TextEditingController nameController = TextEditingController(text: copiedRhythmName);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Podgląd rytmu'),
+        title: Text(AppLocalizations.of(context)!.rhythmPreview),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -46,18 +48,18 @@ class _RhythmViewState extends State<RhythmView> {
               appState.refreshAppState();
               appState.saveData();
             },
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Wpisz nazwę rytmu',
+              hintText: AppLocalizations.of(context)!.inputRhythmName,
             ),
             inputFormatters: [
               LengthLimitingTextInputFormatter(12),
             ],
             style: style,
           ),
-          const Divider(
-            color: Colors.black,
-            thickness: 1, // Adjust the thickness as needed
+          Divider(
+            color: theme.primaryColor,
+            thickness: 1,
           ),
           Expanded(
             child: ReorderableListView.builder(
@@ -98,8 +100,8 @@ class _RhythmViewState extends State<RhythmView> {
                         });
                       },
                     ),
-                    const Divider(
-                      color: Colors.black,
+                    Divider(
+                      color: theme.primaryColor,
                       thickness: 1,
                     ),
                   ],
@@ -116,10 +118,10 @@ class _RhythmViewState extends State<RhythmView> {
                   MaterialPageRoute(builder: (context) => EditBarView(rhythm: widget.rhythm)),
                 );
               },
-              style: ElevatedButton.styleFrom(
-                side: const BorderSide(width: 1, color: Colors.grey),
+              child: Text(
+                AppLocalizations.of(context)!.addAnotherTact,
+                style: bodyStyle,
               ),
-              child: const Text('Dodaj kolejny takt'),
             ),
           ),
         ]),
