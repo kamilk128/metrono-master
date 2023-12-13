@@ -1,13 +1,5 @@
 # MetronoMaster
 
-## flutter_metronome
-
-This project includes code from the original https://github.com/stephenjtyler2/flutter_metronome,
-which is licensed under the Apache-2.0 license. The original license and copyright information
-can be found in the [LICENSE](LICENSE) file.
-
-See: https://medium.com/@stephenjtyler/a-flutter-metronome-58c063f23af5
-
 ## Installing Dependencies
 
 Before running the Flutter application, you need to ensure that all dependencies are installed. Follow the steps below:
