@@ -3,7 +3,6 @@ import 'package:metrono_master/screens/metronome_v2.dart';
 import 'package:metrono_master/screens/rhythm_list_view.dart';
 import 'package:metrono_master/screens/settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'metronome.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -22,15 +21,12 @@ class _NavigationPageState extends State<NavigationPage> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = const MetronomeControl();
-        break;
-      case 1:
         page = const MetronomeV2();
         break;
-      case 2:
+      case 1:
         page = const RhythmListView();
         break;
-      case 3:
+      case 2:
         page = const Settings();
         break;
       default:
@@ -51,10 +47,6 @@ class _NavigationPageState extends State<NavigationPage> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: theme.colorScheme.primary,
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.play_arrow),
-            label: AppLocalizations.of(context)!.metronome,
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.play_arrow),
             label: AppLocalizations.of(context)!.metronome,
