@@ -119,7 +119,7 @@ class _RhythmViewState extends State<RhythmView> {
                 );
               },
               child: Text(
-                AppLocalizations.of(context)!.addAnotherTact,
+                AppLocalizations.of(context)!.addAnotherBar,
                 style: bodyStyle,
               ),
             ),

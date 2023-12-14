@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'models/rhythm.dart';
+import 'models/settings.dart';
 import 'models/themes.dart';
 import 'screens/navigation.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +25,10 @@ class MyApp extends StatelessWidget {
           title: 'MetronoMaster',
           theme: Themes.lightTheme,
           darkTheme: Themes.darkTheme,
-          themeMode: provider.themeMode,
+          themeMode: provider.settings.theme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          locale: Locale(provider.activeLanguage),
+          locale: Locale(provider.settings.language),
           home: const SafeArea(
             child: Scaffold(
               body: NavigationPage(),
@@ -40,10 +41,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.dark;
-  String activeLanguage = 'pl';
+  Settings settings = Settings.defaultSettings;
   List<Rhythm> rhythmList = [];
-  List<String> languages = ['pl', 'en', 'es'];
   // List<Rhythm> rhythmList = [
   //   Rhythm(name: "Trening 1", barList: [
   //     Bar(tempo: 120, meter: (4, 4), repetitions: 3, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
@@ -62,20 +61,21 @@ class MyAppState extends ChangeNotifier {
   }
 
   toggleTheme(bool isOn) {
-    themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
-
+    settings.theme = isOn ? ThemeMode.dark : ThemeMode.light;
+    saveData();
     notifyListeners();
   }
 
   setLanguage(String language) {
-    activeLanguage = language;
-
+    settings.language = language;
+    saveData();
     notifyListeners();
   }
 
   loadData() {
     load().then((value) {
-      rhythmList = value;
+      rhythmList = value.$1;
+      settings = value.$2;
       notifyListeners();
     });
   }
@@ -102,27 +102,33 @@ class MyAppState extends ChangeNotifier {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      String jsonString = jsonEncode(rhythmList.map((rhythm) => rhythm.toJson()).toList());
+      String rhythmListString = jsonEncode(rhythmList.map((rhythm) => rhythm.toJson()).toList());
+      await prefs.setString('rhythmList', rhythmListString);
 
-      await prefs.setString('rhythmList', jsonString);
-      // ignore: empty_catches
-    } catch (e) {}
+      String settingsString = jsonEncode(settings.toJson());
+      await prefs.setString('settings', settingsString);
+    } catch (e) {
+      debugPrint(e as String);
+    }
   }
 
-  Future<List<Rhythm>> load() async {
+  Future<(List<Rhythm>, Settings)> load() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      String jsonString = prefs.getString('rhythmList') ?? '';
+      String rhythmListString = prefs.getString('rhythmList') ?? '';
+      List<Rhythm> loadedRhythmList = rhythmListString.isNotEmpty
+          ? jsonDecode(rhythmListString).map<Rhythm>((json) => Rhythm.fromJson(json)).toList()
+          : <Rhythm>[];
 
-      if (jsonString.isNotEmpty) {
-        List<dynamic> jsonList = jsonDecode(jsonString);
-        List<Rhythm> loadedList = jsonList.map((json) => Rhythm.fromJson(json)).toList();
-        return loadedList;
-      }
-      // ignore: empty_catches
-    } catch (e) {}
+      String settingsString = prefs.getString('settings') ?? '';
+      Settings loadedSettings =
+          settingsString.isNotEmpty ? Settings.fromJson(jsonDecode(settingsString)) : Settings.defaultSettings;
 
-    return []; // Return an empty list if there's an error or no data is found
+      return (loadedRhythmList, loadedSettings);
+    } catch (e) {
+      debugPrint(e as String);
+      return (<Rhythm>[], Settings.defaultSettings);
+    }
   }
 }

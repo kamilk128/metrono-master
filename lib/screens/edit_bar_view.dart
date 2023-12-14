@@ -53,7 +53,7 @@ class _EditBarViewState extends State<EditBarView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.editTact),
+        title: Text(AppLocalizations.of(context)!.editBar),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -123,7 +123,7 @@ class _EditBarViewState extends State<EditBarView> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: AppLocalizations.of(context)!.enterUpperMetro,
+                        hintText: AppLocalizations.of(context)!.enterUpperMeter,
                         hintStyle: headerStyle,
                         contentPadding: const EdgeInsets.all(2),
                       ),
@@ -153,7 +153,7 @@ class _EditBarViewState extends State<EditBarView> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: AppLocalizations.of(context)!.enterLowerMetro,
+                        hintText: AppLocalizations.of(context)!.enterLowerMeter,
                         hintStyle: headerStyle,
                         contentPadding: const EdgeInsets.all(2),
                       ),
@@ -238,7 +238,7 @@ class _EditBarViewState extends State<EditBarView> {
                       items: [
                         DropdownMenuItem(
                           value: Transition.jump,
-                          child: Text(AppLocalizations.of(context)!.jumping, style: bodyStyle),
+                          child: Text(AppLocalizations.of(context)!.jump, style: bodyStyle),
                         ),
                         DropdownMenuItem(
                           value: Transition.linear,
@@ -269,7 +269,7 @@ class _EditBarViewState extends State<EditBarView> {
                   appState.saveData();
                   Navigator.pop(context);
                 },
-                child: Text(AppLocalizations.of(context)!.saveTact, style: bodyStyle),
+                child: Text(AppLocalizations.of(context)!.saveBar, style: bodyStyle),
               ),
             ),
           ],

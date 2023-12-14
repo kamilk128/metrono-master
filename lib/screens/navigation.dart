@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrono_master/screens/metronome_v2.dart';
 import 'package:metrono_master/screens/rhythm_list_view.dart';
-import 'package:metrono_master/screens/settings.dart';
+import 'package:metrono_master/screens/settings_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -27,7 +27,7 @@ class _NavigationPageState extends State<NavigationPage> {
         page = const RhythmListView();
         break;
       case 2:
-        page = const Settings();
+        page = const SettingsView();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -48,15 +48,15 @@ class _NavigationPageState extends State<NavigationPage> {
         backgroundColor: theme.colorScheme.primary,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.play_arrow),
+            icon: const Icon(Icons.play_arrow),
             label: AppLocalizations.of(context)!.metronome,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.queue_music),
+            icon: const Icon(Icons.queue_music),
             label: AppLocalizations.of(context)!.rhythmList,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             label: AppLocalizations.of(context)!.settings,
           ),
         ],
