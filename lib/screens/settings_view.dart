@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../models/settings.dart';
 import '../widgets/change_theme_button.dart';
 import '../main.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+class SettingsView extends StatefulWidget {
+  const SettingsView({Key? key}) : super(key: key);
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<SettingsView> createState() => _SettingsViewState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var languages = appState.languages;
-    var activeLanguage = appState.activeLanguage;
+    var activeLanguage = appState.settings.language;
 
     final theme = Theme.of(context);
+    final headerStyle = theme.textTheme.headlineSmall!.copyWith(color: theme.colorScheme.onBackground);
 
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -26,14 +27,14 @@ class _SettingsState extends State<Settings> {
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.darkMode,
-            style: TextStyle(color: theme.colorScheme.onBackground),
+            style: headerStyle,
           ),
           trailing: const ChangeThemeButtonWidget(),
         ),
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.sound,
-            style: TextStyle(color: theme.colorScheme.onBackground),
+            style: headerStyle,
           ),
           trailing: DropdownButton<String>(
             onChanged: (value) {
@@ -45,7 +46,7 @@ class _SettingsState extends State<Settings> {
                 value: sound,
                 child: Text(
                   sound,
-                  style: TextStyle(color: theme.colorScheme.onBackground),
+                  style: headerStyle,
                 ),
               );
             }).toList(),
@@ -54,7 +55,7 @@ class _SettingsState extends State<Settings> {
         ListTile(
           title: Text(
             AppLocalizations.of(context)!.language,
-            style: TextStyle(color: theme.colorScheme.onBackground),
+            style: headerStyle,
           ),
           trailing: DropdownButton<String>(
             onChanged: (String? value) {
@@ -63,13 +64,12 @@ class _SettingsState extends State<Settings> {
               });
             },
             value: activeLanguage,
-            items: languages // Add your language options here
-                .map((language) {
+            items: Settings.availableLanguages.map((language) {
               return DropdownMenuItem<String>(
                 value: language,
                 child: Text(
                   language,
-                  style: TextStyle(color: theme.colorScheme.onBackground),
+                  style: headerStyle,
                 ),
               );
             }).toList(),
