@@ -17,6 +17,7 @@ dependencies:
   intl: ^0.18.1
   flutter_localizations:
     sdk: flutter
+  country_flags: ^2.2.0
 
 dev_dependencies:
   flutter_test:

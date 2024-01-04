@@ -27,5 +27,6 @@
     "delete": "Eliminar",
     "darkMode": "Modo oscuro",
     "sound": "Sonido",
-    "language": "Idioma"
+    "language": "Idioma",
+    "delay": "Demora"
 }

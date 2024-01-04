@@ -27,5 +27,6 @@
     "delete": "Usuń",
     "darkMode": "Ciemny motyw",
     "sound": "Dźwięk",
-    "language": "Język"
+    "language": "Język",
+    "delay": "Opóźnienie"
 }

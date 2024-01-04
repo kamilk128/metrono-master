@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:metrono_master/custom_timer.dart';
+import 'package:metrono_master/models/settings.dart';
 import 'package:metrono_master/screens/rhythm_list_view.dart';
 import 'package:provider/provider.dart';
 import 'package:just_audio/just_audio.dart';
@@ -21,22 +22,26 @@ class MetronomeV2 extends StatefulWidget {
 class _MetronomeV2State extends State<MetronomeV2> {
   Rhythm? currentRhythm;
   Bar? currentBar;
-  int currentNote = 0;
+  int currentNote = -1;
   bool pause = true;
   bool tick = false;
   CustomTimer? tickTimer;
+  Settings? settings;
 
   final player = AudioPlayer();
 
   Future<void> onTick() async {
-    await player.setUrl('asset:./assets/sounds/Synth_Square_E_${currentBar!.accents[currentNote] ? 'hi' : 'lo'}.wav');
+    currentNote = (currentNote + 1) % currentBar!.meter.$1;
+    await player
+        .setUrl('asset:./assets/sounds/${settings!.sound}_${currentBar!.accents[currentNote] ? 'hi' : 'lo'}.wav');
     player.play();
-    tick = true;
-    setState(() {});
-    Future.delayed(const Duration(milliseconds: 100), () {
-      tick = false;
-      currentNote = (currentNote + 1) % currentBar!.meter.$1;
+    Future.delayed(Duration(milliseconds: settings!.delay), () {
+      tick = true;
       setState(() {});
+      Future.delayed(const Duration(milliseconds: 100), () {
+        tick = false;
+        setState(() {});
+      });
     });
   }
 
@@ -44,6 +49,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
   void initState() {
     super.initState();
     tickTimer = CustomTimer(const Duration(milliseconds: 1000), onTick);
+    final provider = Provider.of<MyAppState>(context, listen: false);
+    settings = provider.settings;
   }
 
   @override
@@ -59,7 +66,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
     if (rhythmList.isEmpty) {
       return const RhythmListView();
     } else {
-      currentRhythm ??= rhythmList[0];
+      currentRhythm ??= rhythmList[appState.rhythmIndex];
       currentBar ??= currentRhythm!.barList[0];
     }
 
@@ -78,9 +85,10 @@ class _MetronomeV2State extends State<MetronomeV2> {
             value: currentRhythm,
             onChanged: (value) {
               setState(() {
-                currentRhythm = value!;
+                appState.rhythmIndex = rhythmList.indexOf(value!);
+                currentRhythm = value;
                 currentBar = currentRhythm!.barList[0];
-                currentNote = 0;
+                currentNote = -1;
                 tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
                 pause = true;
               });
@@ -170,7 +178,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
                     ),
                     onPressed: () {
                       setState(() {
-                        currentNote = 0;
+                        currentNote = -1;
                         tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
                         tickTimer!.startTimer();
                         pause = false;
