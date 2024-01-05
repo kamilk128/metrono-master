@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/rhythm.dart';
+import '../utils/scale_helper.dart';
 
 class RhythmRow extends StatelessWidget {
   const RhythmRow({
@@ -22,7 +23,11 @@ class RhythmRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(rhythm.name, style: style),
+        Text(
+          rhythm.name,
+          style: style,
+          textScaler: ScaleHelper.getScaler(rhythm.name, style, 180),
+        ),
         const Spacer(),
         ElevatedButton(
           onPressed: () {

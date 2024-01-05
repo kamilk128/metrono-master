@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:metrono_master/custom_timer.dart';
+import 'package:metrono_master/utils/custom_timer.dart';
 import 'package:metrono_master/models/settings.dart';
 import 'package:metrono_master/screens/rhythm_list_view.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../main.dart';
 import '../models/bar.dart';
 import '../models/rhythm.dart';
+import '../utils/scale_helper.dart';
 
 class MetronomeV2 extends StatefulWidget {
   const MetronomeV2({Key? key}) : super(key: key);
@@ -24,6 +25,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
   Bar? currentBar;
   int currentNote = -1;
   int currentRepetition = 1;
+  double currentTempo = -1;
+  double previousBarTempo = -1;
   int barIndex = 0;
   bool pause = true;
   bool tick = false;
@@ -45,10 +48,19 @@ class _MetronomeV2State extends State<MetronomeV2> {
           barIndex++;
         }
         currentBar = currentRhythm!.barList[barIndex];
-        tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2, restart: true);
+        if (currentBar!.transition == Transition.jump) {
+          currentTempo = currentBar!.tempo.toDouble();
+          tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2, restart: true);
+        } else if (currentBar!.transition == Transition.linear) {
+          previousBarTempo = currentTempo;
+        }
       }
     } else {
       currentNote++;
+    }
+    if (currentBar!.transition == Transition.linear) {
+      currentTempo += (currentBar!.tempo - previousBarTempo) / (currentBar!.repetitions * currentBar!.meter.$2);
+      tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2, restart: true);
     }
     await player
         .setUrl('asset:./assets/sounds/${settings!.sound}_${currentBar!.accents[currentNote] ? 'hi' : 'lo'}.wav');
@@ -84,8 +96,16 @@ class _MetronomeV2State extends State<MetronomeV2> {
     if (rhythmList.isEmpty) {
       return const RhythmListView();
     } else {
-      currentRhythm ??= rhythmList[appState.rhythmIndex];
+      currentRhythm ??= rhythmList.contains(appState.lastRhythm) ? appState.lastRhythm : rhythmList[0];
       currentBar ??= currentRhythm!.barList[barIndex];
+      if (previousBarTempo == -1 || currentTempo == -1) {
+        previousBarTempo = currentRhythm!.barList.last.tempo.toDouble();
+        if (currentBar!.transition == Transition.jump) {
+          currentTempo = currentBar!.tempo.toDouble();
+        } else if (currentBar!.transition == Transition.linear) {
+          currentTempo = previousBarTempo;
+        }
+      }
     }
 
     final theme = Theme.of(context);
@@ -112,13 +132,19 @@ class _MetronomeV2State extends State<MetronomeV2> {
               alignment: AlignmentDirectional.center,
               onChanged: (value) {
                 setState(() {
-                  appState.rhythmIndex = rhythmList.indexOf(value!);
+                  appState.lastRhythm = value!;
                   currentRhythm = value;
                   barIndex = 0;
                   currentBar = currentRhythm!.barList[barIndex];
                   currentNote = -1;
                   currentRepetition = 1;
-                  tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
+                  previousBarTempo = currentRhythm!.barList.last.tempo.toDouble();
+                  if (currentBar!.transition == Transition.jump) {
+                    currentTempo = currentBar!.tempo.toDouble();
+                  } else if (currentBar!.transition == Transition.linear) {
+                    currentTempo = previousBarTempo;
+                  }
+                  tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2);
                   pause = true;
                 });
               },
@@ -127,7 +153,11 @@ class _MetronomeV2State extends State<MetronomeV2> {
                   .map((rhythm) => DropdownMenuItem<Rhythm>(
                         value: rhythm,
                         alignment: AlignmentDirectional.center,
-                        child: Text(rhythm.name, style: style),
+                        child: Text(
+                          rhythm.name,
+                          style: style,
+                          textScaler: ScaleHelper.getScaler(rhythm.name, style, 240),
+                        ),
                       ))
                   .toList(),
               underline: Container(),
@@ -146,7 +176,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
                   Row(
                     children: [
                       Icon(Icons.music_note, size: style.fontSize),
-                      Text('=${currentBar!.tempo}', style: style),
+                      Text('=${currentTempo.round()}', style: style),
                     ],
                   ),
                 ],
@@ -193,7 +223,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
                     onPressed: () {
                       setState(() {
                         pause = !pause;
-                        tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
+                        tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2);
                         pause ? tickTimer!.stopTimer() : tickTimer!.startTimer();
                       });
                     },
@@ -215,7 +245,13 @@ class _MetronomeV2State extends State<MetronomeV2> {
                         currentBar = currentRhythm!.barList[barIndex];
                         currentNote = -1;
                         currentRepetition = 1;
-                        tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
+                        previousBarTempo = currentRhythm!.barList.last.tempo.toDouble();
+                        if (currentBar!.transition == Transition.jump) {
+                          currentTempo = currentBar!.tempo.toDouble();
+                        } else if (currentBar!.transition == Transition.linear) {
+                          currentTempo = previousBarTempo;
+                        }
+                        tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2);
                         tickTimer!.startTimer();
                         pause = false;
                       });

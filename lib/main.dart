@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   Settings settings = Settings.defaultSettings;
   List<Rhythm> rhythmList = [];
-  int rhythmIndex = 0;
+  Rhythm? lastRhythm;
   // List<Rhythm> rhythmList = [
   //   Rhythm(name: "Trening 1", barList: [
   //     Bar(tempo: 120, meter: (4, 4), repetitions: 3, accents: Bar.generateAccents(4, 1), transition: Transition.jump),
