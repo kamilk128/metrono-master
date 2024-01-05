@@ -18,6 +18,11 @@ class Themes {
       surface: Color.fromRGBO(38, 50, 56, 1),
       onSurface: Colors.white,
     ),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: Colors.lime,
+      selectionColor: Colors.lime,
+      selectionHandleColor: Colors.lime,
+    ),
   );
 
   //-------------light THEME SETTINGS----
@@ -36,6 +41,11 @@ class Themes {
       onBackground: Colors.black,
       surface: Color.fromRGBO(158, 174, 183, 1),
       onSurface: Colors.white,
+    ),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: Colors.purple,
+      selectionColor: Colors.purple,
+      selectionHandleColor: Colors.purple,
     ),
   );
 }

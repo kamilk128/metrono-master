@@ -23,6 +23,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
   Rhythm? currentRhythm;
   Bar? currentBar;
   int currentNote = -1;
+  int currentRepetition = 1;
+  int barIndex = 0;
   bool pause = true;
   bool tick = false;
   CustomTimer? tickTimer;
@@ -31,7 +33,23 @@ class _MetronomeV2State extends State<MetronomeV2> {
   final player = AudioPlayer();
 
   Future<void> onTick() async {
-    currentNote = (currentNote + 1) % currentBar!.meter.$1;
+    if (currentNote + 1 == currentBar!.meter.$1) {
+      currentNote = 0;
+      if (currentRepetition != currentBar!.repetitions) {
+        currentRepetition++;
+      } else {
+        currentRepetition = 1;
+        if (barIndex + 1 == currentRhythm!.barList.length) {
+          barIndex = 0;
+        } else {
+          barIndex++;
+        }
+        currentBar = currentRhythm!.barList[barIndex];
+        tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2, restart: true);
+      }
+    } else {
+      currentNote++;
+    }
     await player
         .setUrl('asset:./assets/sounds/${settings!.sound}_${currentBar!.accents[currentNote] ? 'hi' : 'lo'}.wav');
     player.play();
@@ -67,7 +85,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
       return const RhythmListView();
     } else {
       currentRhythm ??= rhythmList[appState.rhythmIndex];
-      currentBar ??= currentRhythm!.barList[0];
+      currentBar ??= currentRhythm!.barList[barIndex];
     }
 
     final theme = Theme.of(context);
@@ -96,8 +114,10 @@ class _MetronomeV2State extends State<MetronomeV2> {
                 setState(() {
                   appState.rhythmIndex = rhythmList.indexOf(value!);
                   currentRhythm = value;
-                  currentBar = currentRhythm!.barList[0];
+                  barIndex = 0;
+                  currentBar = currentRhythm!.barList[barIndex];
                   currentNote = -1;
+                  currentRepetition = 1;
                   tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
                   pause = true;
                 });
@@ -191,7 +211,10 @@ class _MetronomeV2State extends State<MetronomeV2> {
                     ),
                     onPressed: () {
                       setState(() {
+                        barIndex = 0;
+                        currentBar = currentRhythm!.barList[barIndex];
                         currentNote = -1;
+                        currentRepetition = 1;
                         tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
                         tickTimer!.startTimer();
                         pause = false;
