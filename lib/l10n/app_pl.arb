@@ -28,5 +28,10 @@
     "darkMode": "Ciemny motyw",
     "sound": "Dźwięk",
     "language": "Język",
-    "delay": "Opóźnienie"
+    "delay": "Opóźnienie",
+    "saveBackup": "Zapisz kopię zapasową",
+    "loadBackup": "Wczytaj kopię zapasową",
+    "areYouSure": "Czy jesteś pewien?",
+    "yes": "Tak",
+    "no": "Nie"
 }

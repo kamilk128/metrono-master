@@ -85,18 +85,6 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  loadData() {
-    load().then((value) {
-      rhythmList = value.$1;
-      settings = value.$2;
-      notifyListeners();
-    });
-  }
-
-  saveData() {
-    save().then((value) => null);
-  }
-
   addNewRhythm(String rhythmName) {
     rhythmList.add(Rhythm(name: rhythmName, barList: []));
     notifyListeners();
@@ -111,30 +99,42 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> save() async {
+  saveData({bool doBackup = false}) {
+    save(doBackup).then((value) => null);
+  }
+
+  loadData({bool doBackup = false}) {
+    load(doBackup).then((value) {
+      rhythmList = value.$1;
+      settings = value.$2;
+      notifyListeners();
+    });
+  }
+
+  Future<void> save(bool doBackup) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
       String rhythmListString = jsonEncode(rhythmList.map((rhythm) => rhythm.toJson()).toList());
-      await prefs.setString('rhythmList', rhythmListString);
+      await prefs.setString('rhythmList${doBackup ? 'Backup' : ''}', rhythmListString);
 
       String settingsString = jsonEncode(settings.toJson());
-      await prefs.setString('settings', settingsString);
+      await prefs.setString('settings${doBackup ? 'Backup' : ''}', settingsString);
     } catch (e) {
       debugPrint(e as String);
     }
   }
 
-  Future<(List<Rhythm>, Settings)> load() async {
+  Future<(List<Rhythm>, Settings)> load(bool doBackup) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      String rhythmListString = prefs.getString('rhythmList') ?? '';
+      String rhythmListString = prefs.getString('rhythmList${doBackup ? 'Backup' : ''}') ?? '';
       List<Rhythm> loadedRhythmList = rhythmListString.isNotEmpty
           ? jsonDecode(rhythmListString).map<Rhythm>((json) => Rhythm.fromJson(json)).toList()
           : <Rhythm>[];
 
-      String settingsString = prefs.getString('settings') ?? '';
+      String settingsString = prefs.getString('settings${doBackup ? 'Backup' : ''}') ?? '';
       Settings loadedSettings =
           settingsString.isNotEmpty ? Settings.fromJson(jsonDecode(settingsString)) : Settings.defaultSettings;
 

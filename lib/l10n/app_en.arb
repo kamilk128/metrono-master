@@ -28,5 +28,10 @@
     "darkMode": "Dark mode",
     "sound": "Sound",
     "language": "Language",
-    "delay": "Delay"
+    "delay": "Delay",
+    "saveBackup": "Save backup",
+    "loadBackup": "Load backup",
+    "areYouSure": "Are you sure?",
+    "yes": "Yes",
+    "no": "No"
 }

@@ -80,27 +80,40 @@ class _MetronomeV2State extends State<MetronomeV2> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          DropdownButton<Rhythm>(
-            isExpanded: true,
-            value: currentRhythm,
-            onChanged: (value) {
-              setState(() {
-                appState.rhythmIndex = rhythmList.indexOf(value!);
-                currentRhythm = value;
-                currentBar = currentRhythm!.barList[0];
-                currentNote = -1;
-                tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
-                pause = true;
-              });
-            },
-            items: appState.rhythmList
-                .where((rhythm) => rhythm.barList.isNotEmpty)
-                .map((rhythm) => DropdownMenuItem<Rhythm>(
-                      value: rhythm,
-                      child: Text(rhythm.name, style: style),
-                    ))
-                .toList(),
-            underline: Container(),
+          Container(
+            decoration: ShapeDecoration(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: theme.primaryColor),
+                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+              ),
+              color: theme.primaryColor,
+            ),
+            child: DropdownButton<Rhythm>(
+              isExpanded: true,
+              value: currentRhythm,
+              alignment: AlignmentDirectional.center,
+              onChanged: (value) {
+                setState(() {
+                  appState.rhythmIndex = rhythmList.indexOf(value!);
+                  currentRhythm = value;
+                  currentBar = currentRhythm!.barList[0];
+                  currentNote = -1;
+                  tickTimer!.changeTempo(currentBar!.tempo, currentBar!.meter.$2);
+                  pause = true;
+                });
+              },
+              items: appState.rhythmList
+                  .where((rhythm) => rhythm.barList.isNotEmpty)
+                  .map((rhythm) => DropdownMenuItem<Rhythm>(
+                        value: rhythm,
+                        alignment: AlignmentDirectional.center,
+                        child: Text(rhythm.name, style: style),
+                      ))
+                  .toList(),
+              underline: Container(),
+              iconSize: 48,
+              dropdownColor: theme.primaryColor,
+            ),
           ),
           const Spacer(),
           Row(

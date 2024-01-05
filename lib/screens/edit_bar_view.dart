@@ -104,7 +104,6 @@ class _EditBarViewState extends State<EditBarView> {
                     ),
                     Divider(
                       color: theme.primaryColor,
-                      // color: Color.fromARGB(255, 44, 44, 44),
                       thickness: 1,
                     ),
                     Text(AppLocalizations.of(context)!.meter, style: headerStyle),
@@ -134,9 +133,9 @@ class _EditBarViewState extends State<EditBarView> {
                       style: style,
                     ),
                     Container(
-                      width: style.fontSize, // Adjust the percentage as needed
-                      height: 1.0, // Set the divider thickness
-                      color: Colors.white,
+                      width: style.fontSize,
+                      height: 1.0,
+                      color: theme.colorScheme.onBackground,
                     ),
                     TextField(
                       textAlign: TextAlign.center,

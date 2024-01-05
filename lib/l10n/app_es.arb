@@ -28,5 +28,10 @@
     "darkMode": "Modo oscuro",
     "sound": "Sonido",
     "language": "Idioma",
-    "delay": "Demora"
+    "delay": "Demora",
+    "saveBackup": "Guardar copia de seguridad",
+    "loadBackup": "Cargar copia de seguridad",
+    "areYouSure": "¿Estas seguro?",
+    "yes": "Sí",
+    "no": "No"
 }
