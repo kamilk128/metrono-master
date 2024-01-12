@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/widgets/rhythm_row.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../main.dart';
-import 'rhythm_view.dart';
+import '../screens/rhythm_view.dart';
+import '../widgets/rhythm_row.dart';
 
 class RhythmListView extends StatefulWidget {
   const RhythmListView({Key? key}) : super(key: key);

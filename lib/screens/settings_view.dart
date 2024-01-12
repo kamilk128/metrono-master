@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import '../main.dart';
 import '../models/settings.dart';
 import '../widgets/change_theme_button.dart';
-import '../main.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({Key? key}) : super(key: key);

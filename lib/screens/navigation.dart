@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/screens/metronome_v2.dart';
-import 'package:metrono_master/screens/rhythm_list_view.dart';
-import 'package:metrono_master/screens/settings_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../screens/metronome_v2.dart';
+import '../screens/rhythm_list_view.dart';
+import '../screens/settings_view.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});

@@ -1,16 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:metrono_master/utils/custom_timer.dart';
-import 'package:metrono_master/models/settings.dart';
-import 'package:metrono_master/screens/rhythm_list_view.dart';
-import 'package:provider/provider.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:provider/provider.dart';
 
 import '../main.dart';
 import '../models/bar.dart';
 import '../models/rhythm.dart';
+import '../models/settings.dart';
+import '../screens/rhythm_list_view.dart';
+import '../utils/custom_timer.dart';
 import '../utils/scale_helper.dart';
 
 class MetronomeV2 extends StatefulWidget {
@@ -33,6 +33,9 @@ class _MetronomeV2State extends State<MetronomeV2> {
   CustomTimer? tickTimer;
   Settings? settings;
 
+  Stopwatch stopwatch = Stopwatch()..start();
+  Duration lastTick = const Duration();
+
   final player = AudioPlayer();
 
   Future<void> onTick() async {
@@ -53,15 +56,25 @@ class _MetronomeV2State extends State<MetronomeV2> {
           tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2, restart: true);
         } else if (currentBar!.transition == Transition.linear) {
           previousBarTempo = currentTempo;
+        } else if (currentBar!.transition == Transition.corrected) {
+          previousBarTempo = currentTempo;
         }
       }
     } else {
       currentNote++;
     }
+    double tempoFactor = (currentBar!.tempo - previousBarTempo) / (currentBar!.repetitions * currentBar!.meter.$1);
     if (currentBar!.transition == Transition.linear) {
-      currentTempo += (currentBar!.tempo - previousBarTempo) / (currentBar!.repetitions * currentBar!.meter.$2);
+      currentTempo += tempoFactor;
+      tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2, restart: true);
+    } else if (currentBar!.transition == Transition.corrected) {
+      currentTempo +=
+          tempoFactor * ((currentBar!.tempo + previousBarTempo + tempoFactor) / 2) / (currentTempo + tempoFactor);
       tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2, restart: true);
     }
+
+    debugPrint('onTick: ${stopwatch.elapsed - lastTick}');
+    lastTick = stopwatch.elapsed;
     await player
         .setUrl('asset:./assets/sounds/${settings!.sound}_${currentBar!.accents[currentNote] ? 'hi' : 'lo'}.wav');
     player.play();
@@ -104,6 +117,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
           currentTempo = currentBar!.tempo.toDouble();
         } else if (currentBar!.transition == Transition.linear) {
           currentTempo = previousBarTempo;
+        } else if (currentBar!.transition == Transition.corrected) {
+          currentTempo = previousBarTempo;
         }
       }
     }
@@ -142,6 +157,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
                   if (currentBar!.transition == Transition.jump) {
                     currentTempo = currentBar!.tempo.toDouble();
                   } else if (currentBar!.transition == Transition.linear) {
+                    currentTempo = previousBarTempo;
+                  } else if (currentBar!.transition == Transition.corrected) {
                     currentTempo = previousBarTempo;
                   }
                   tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2);
@@ -249,6 +266,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
                         if (currentBar!.transition == Transition.jump) {
                           currentTempo = currentBar!.tempo.toDouble();
                         } else if (currentBar!.transition == Transition.linear) {
+                          currentTempo = previousBarTempo;
+                        } else if (currentBar!.transition == Transition.corrected) {
                           currentTempo = previousBarTempo;
                         }
                         tickTimer!.changeTempo(currentTempo.round(), currentBar!.meter.$2);

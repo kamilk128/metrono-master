@@ -1,4 +1,4 @@
-enum Transition { jump, linear }
+enum Transition { jump, linear, corrected }
 
 class Bar {
   int tempo;
@@ -92,6 +92,8 @@ class Bar {
         return Transition.jump;
       case 'Transition.linear':
         return Transition.linear;
+      case 'Transition.corrected':
+        return Transition.corrected;
       default:
         throw ArgumentError('Invalid transition string: $transition');
     }

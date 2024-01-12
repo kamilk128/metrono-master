@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:metrono_master/models/bar.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../models/bar.dart';
 
 class BarRow extends StatelessWidget {
   BarRow({
@@ -31,11 +32,19 @@ class BarRow extends StatelessWidget {
     height: 32,
     width: 32,
   );
+  static SvgPicture correctedImage = SvgPicture.asset(
+    "./assets/icons/corrected.svg",
+    semanticsLabel: 'corrected',
+    height: 32,
+    width: 32,
+  );
 
   final Widget jumpIncreaseIcon = jumpImage;
   final Widget jumpDecreaseIcon = Transform.flip(flipX: true, child: jumpImage);
   final Widget linearIncreaseIcon = linearImage;
   final Widget linearDecreaseIcon = Transform.flip(flipX: true, child: linearImage);
+  final Widget correctedIncreaseIcon = correctedImage;
+  final Widget correctedDecreaseIcon = Transform.flip(flipX: true, child: correctedImage);
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +69,12 @@ class BarRow extends StatelessWidget {
           } else {
             return linearDecreaseIcon;
           }
+        case Transition.corrected:
+          if (bar.tempo > previousBar!.tempo) {
+            return correctedIncreaseIcon;
+          } else {
+            return correctedDecreaseIcon;
+          }
         default:
           return const Icon(Icons.help);
       }
@@ -71,7 +86,7 @@ class BarRow extends StatelessWidget {
         Text('${index + 1}.', style: style),
         const Spacer(),
         Icon(Icons.music_note, color: style.color, size: style.fontSize),
-        Text('=${bar.tempo}', style: style),
+        Text('=${bar.tempo}'.padRight(4), style: style),
         const Spacer(),
         Column(
           children: [

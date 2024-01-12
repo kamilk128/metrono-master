@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:metrono_master/main.dart';
-import 'package:metrono_master/models/rhythm.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart';
 import '../models/bar.dart';
+import '../models/rhythm.dart';
 
 class EditBarView extends StatefulWidget {
   const EditBarView({
@@ -234,15 +234,23 @@ class _EditBarViewState extends State<EditBarView> {
                           barCopy.setTransition(value!);
                         });
                       },
+                      alignment: AlignmentDirectional.center,
                       items: [
                         DropdownMenuItem(
                           value: Transition.jump,
+                          alignment: AlignmentDirectional.center,
                           child: Text(AppLocalizations.of(context)!.jump, style: bodyStyle),
                         ),
                         DropdownMenuItem(
                           value: Transition.linear,
+                          alignment: AlignmentDirectional.center,
                           child: Text(AppLocalizations.of(context)!.linear, style: bodyStyle),
                         ),
+                        DropdownMenuItem(
+                          value: Transition.corrected,
+                          alignment: AlignmentDirectional.center,
+                          child: Text(AppLocalizations.of(context)!.corrected, style: bodyStyle),
+                        )
                       ],
                       underline: Container(),
                     ),

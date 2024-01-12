@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:metrono_master/models/rhythm.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
 import '../main.dart';
 import '../models/bar.dart';
+import '../models/rhythm.dart';
+import '../screens/edit_bar_view.dart';
 import '../widgets/bar_row.dart';
-import 'edit_bar_view.dart';
 
 class RhythmView extends StatefulWidget {
   const RhythmView({Key? key, required this.rhythm}) : super(key: key);
