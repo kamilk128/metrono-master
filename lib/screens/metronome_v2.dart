@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 
@@ -192,8 +193,14 @@ class _MetronomeV2State extends State<MetronomeV2> {
                   Text(AppLocalizations.of(context)!.tempo, style: bodyStyle),
                   Row(
                     children: [
-                      Icon(Icons.music_note, size: style.fontSize),
-                      Text('=${currentTempo.round()}', style: style),
+                      SvgPicture.asset(
+                        "./assets/icons/music-note-quarter.svg",
+                        semanticsLabel: 'music-note-quarter',
+                        height: style.fontSize,
+                        width: style.fontSize,
+                        colorFilter: ColorFilter.mode(theme.colorScheme.onBackground, BlendMode.srcIn),
+                      ),
+                      Text('= ${currentTempo.round()}', style: style),
                     ],
                   ),
                 ],

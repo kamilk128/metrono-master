@@ -67,12 +67,12 @@ class _EditBarViewState extends State<EditBarView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.music_note,
+                          Icons.speed,
                           size: style.fontSize! / 2.0,
                         ),
-                        Text(AppLocalizations.of(context)!.tempo, style: headerStyle),
+                        Text(' ${AppLocalizations.of(context)!.tempo} ', style: headerStyle),
                         Icon(
-                          Icons.music_note,
+                          Icons.speed,
                           size: style.fontSize! / 2.0,
                         ),
                       ],
@@ -106,7 +106,20 @@ class _EditBarViewState extends State<EditBarView> {
                       color: theme.primaryColor,
                       thickness: 1,
                     ),
-                    Text(AppLocalizations.of(context)!.meter, style: headerStyle),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.hourglass_bottom,
+                          size: style.fontSize! / 2.0,
+                        ),
+                        Text(' ${AppLocalizations.of(context)!.meter} ', style: headerStyle),
+                        Icon(
+                          Icons.hourglass_bottom,
+                          size: style.fontSize! / 2.0,
+                        ),
+                      ],
+                    ),
                     TextField(
                       textAlign: TextAlign.center,
                       controller: meterTopController,
@@ -166,7 +179,20 @@ class _EditBarViewState extends State<EditBarView> {
                       color: theme.primaryColor,
                       thickness: 1,
                     ),
-                    Text(AppLocalizations.of(context)!.numberOfRepeats, style: headerStyle),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.repeat,
+                          size: style.fontSize! / 2.0,
+                        ),
+                        Text(' ${AppLocalizations.of(context)!.numberOfRepeats} ', style: headerStyle),
+                        Icon(
+                          Icons.repeat,
+                          size: style.fontSize! / 2.0,
+                        ),
+                      ],
+                    ),
                     TextField(
                       textAlign: TextAlign.center,
                       controller: repetitionsController,
@@ -196,7 +222,20 @@ class _EditBarViewState extends State<EditBarView> {
                       color: theme.primaryColor,
                       thickness: 1,
                     ),
-                    Text(AppLocalizations.of(context)!.accentPosition, style: headerStyle),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.numbers,
+                          size: style.fontSize! / 2.0,
+                        ),
+                        Text(' ${AppLocalizations.of(context)!.accentPosition} ', style: headerStyle),
+                        Icon(
+                          Icons.numbers,
+                          size: style.fontSize! / 2.0,
+                        ),
+                      ],
+                    ),
                     TextField(
                       textAlign: TextAlign.center,
                       controller: accentsController,
@@ -226,7 +265,20 @@ class _EditBarViewState extends State<EditBarView> {
                       color: theme.primaryColor,
                       thickness: 1,
                     ),
-                    Text(AppLocalizations.of(context)!.transition, style: headerStyle),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.trending_up,
+                          size: style.fontSize! / 2.0,
+                        ),
+                        Text(' ${AppLocalizations.of(context)!.transition} ', style: headerStyle),
+                        Icon(
+                          Icons.trending_up,
+                          size: style.fontSize! / 2.0,
+                        ),
+                      ],
+                    ),
                     DropdownButton<Transition>(
                       value: barCopy.transition,
                       onChanged: (value) {

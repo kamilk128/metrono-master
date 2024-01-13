@@ -85,8 +85,14 @@ class BarRow extends StatelessWidget {
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text('${index + 1}.', style: style),
         const Spacer(),
-        Icon(Icons.music_note, color: style.color, size: style.fontSize),
-        Text('=${bar.tempo}'.padRight(4), style: style),
+        SvgPicture.asset(
+          "./assets/icons/music-note-quarter.svg",
+          semanticsLabel: 'music-note-quarter',
+          height: style.fontSize,
+          width: style.fontSize,
+          colorFilter: ColorFilter.mode(theme.colorScheme.onBackground, BlendMode.srcIn),
+        ),
+        Text('= ${bar.tempo}'.padRight(5), style: style),
         const Spacer(),
         Column(
           children: [
