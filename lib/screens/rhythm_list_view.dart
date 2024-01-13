@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
+import '../models/rhythm.dart';
 import '../screens/rhythm_view.dart';
 import '../widgets/rhythm_row.dart';
 
@@ -26,13 +27,30 @@ class _RhythmListViewState extends State<RhythmListView> {
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: Column(children: [
         Expanded(
-          child: ListView.builder(
+          child: ReorderableListView.builder(
+            onReorder: (oldIndex, newIndex) {
+              setState(() {
+                if (oldIndex < newIndex) {
+                  newIndex -= 1;
+                }
+                final Rhythm rhythm = rhythmList.removeAt(oldIndex);
+                rhythmList.insert(newIndex, rhythm);
+                appState.saveData();
+              });
+            },
             itemCount: rhythmList.length,
             itemBuilder: (context, index) {
               return Column(
+                key: ValueKey(index),
                 children: [
                   RhythmRow(
                     rhythm: rhythmList[index],
+                    onClonePressed: () {
+                      setState(() {
+                        rhythmList.add(Rhythm.fromRhythm(rhythmList[index]));
+                        appState.saveData();
+                      });
+                    },
                     onEditPressed: () {
                       Navigator.push(
                         context,
@@ -56,13 +74,16 @@ class _RhythmListViewState extends State<RhythmListView> {
         ),
         Container(
           margin: const EdgeInsets.only(bottom: 10.0),
-          child: ElevatedButton(
-            onPressed: () {
-              setState(() {
-                appState.addNewRhythm(AppLocalizations.of(context)!.newRhythm);
-              });
-            },
-            child: Icon(Icons.add, color: style.color, size: style.fontSize),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  appState.addNewRhythm(AppLocalizations.of(context)!.newRhythm);
+                });
+              },
+              child: Icon(Icons.add, color: style.color, size: style.fontSize),
+            ),
           ),
         ),
       ]),

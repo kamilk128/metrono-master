@@ -10,6 +10,7 @@ class BarRow extends StatelessWidget {
     required this.index,
     required this.bar,
     required this.previousBar,
+    required this.onClonePressed,
     required this.onEditPressed,
     required this.onDeletePressed,
   });
@@ -17,6 +18,7 @@ class BarRow extends StatelessWidget {
   final int index;
   final Bar bar;
   final Bar? previousBar;
+  final VoidCallback onClonePressed;
   final VoidCallback onEditPressed;
   final VoidCallback onDeletePressed;
 
@@ -117,6 +119,9 @@ class BarRow extends StatelessWidget {
         PopupMenuButton<String>(
           onSelected: (value) {
             switch (value) {
+              case 'clone':
+                onClonePressed();
+                break;
               case 'edit':
                 onEditPressed();
                 break;
@@ -128,6 +133,19 @@ class BarRow extends StatelessWidget {
             }
           },
           itemBuilder: (BuildContext context) => [
+            PopupMenuItem<String>(
+              value: 'clone',
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.copy,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(AppLocalizations.of(context)!.clone),
+                ],
+              ),
+            ),
             PopupMenuItem<String>(
               value: 'edit',
               child: Row(

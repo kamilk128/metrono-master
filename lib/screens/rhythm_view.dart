@@ -79,6 +79,12 @@ class _RhythmViewState extends State<RhythmView> {
                       index: index,
                       bar: rhythm.barList[index],
                       previousBar: index > 0 ? rhythm.barList[index - 1] : rhythm.barList.last,
+                      onClonePressed: () {
+                        setState(() {
+                          rhythm.barList.add(Bar.fromBar(rhythm.barList[index]));
+                          appState.saveData();
+                        });
+                      },
                       onEditPressed: () {
                         Navigator.push(
                           context,

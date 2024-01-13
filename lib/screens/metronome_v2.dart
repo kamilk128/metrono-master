@@ -112,6 +112,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
     } else {
       currentRhythm ??= rhythmList.contains(appState.lastRhythm) ? appState.lastRhythm : rhythmList[0];
       currentBar ??= currentRhythm!.barList[barIndex];
+      appState.lastRhythm = currentRhythm;
       if (previousBarTempo == -1 || currentTempo == -1) {
         previousBarTempo = currentRhythm!.barList.last.tempo.toDouble();
         if (currentBar!.transition == Transition.jump) {
