@@ -24,11 +24,13 @@ class MetronomeV2 extends StatefulWidget {
 class _MetronomeV2State extends State<MetronomeV2> {
   Rhythm? currentRhythm;
   Bar? currentBar;
+  Bar? nextBar;
   int currentNote = -1;
   int currentRepetition = 1;
   double currentTempo = -1;
   double previousBarTempo = -1;
   int barIndex = 0;
+  int nextBarIndex = 0;
   bool pause = true;
   bool tick = false;
   CustomTimer? tickTimer;
@@ -60,6 +62,10 @@ class _MetronomeV2State extends State<MetronomeV2> {
         } else if (currentBar!.transition == Transition.corrected) {
           previousBarTempo = currentTempo;
         }
+      }
+      if (currentRepetition == currentBar!.repetitions) {
+        nextBarIndex = nextBarIndex == currentRhythm!.barList.length ? 0 : barIndex + 1;
+        nextBar = currentRhythm!.barList[nextBarIndex];
       }
     } else {
       currentNote++;
@@ -112,6 +118,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
     } else {
       currentRhythm ??= rhythmList.contains(appState.lastRhythm) ? appState.lastRhythm : rhythmList[0];
       currentBar ??= currentRhythm!.barList[barIndex];
+      nextBarIndex = nextBarIndex == currentRhythm!.barList.length ? 0 : barIndex + 1;
+      nextBar ??= currentRhythm!.barList[nextBarIndex];
       appState.lastRhythm = currentRhythm;
       if (previousBarTempo == -1 || currentTempo == -1) {
         previousBarTempo = currentRhythm!.barList.last.tempo.toDouble();
@@ -153,6 +161,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
                   currentRhythm = value;
                   barIndex = 0;
                   currentBar = currentRhythm!.barList[barIndex];
+                  nextBarIndex = nextBarIndex == currentRhythm!.barList.length ? 0 : barIndex + 1;
+                  nextBar = currentRhythm!.barList[nextBarIndex];
                   currentNote = -1;
                   currentRepetition = 1;
                   previousBarTempo = currentRhythm!.barList.last.tempo.toDouble();
@@ -234,6 +244,20 @@ class _MetronomeV2State extends State<MetronomeV2> {
                           shape: BoxShape.circle,
                         )))
             ]),
+          const Padding(padding: EdgeInsets.only(top: 15.0)),
+          for (int j = 0; j < nextBar!.meter.$1; j += min(nextBar!.meter.$2, 8))
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              for (int i = 0; i < min(nextBar!.meter.$2, 8) && i + j < nextBar!.meter.$1; i++)
+                Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: Container(
+                        width: nextBar!.accents[i + j] ? 22.5 : 15.0,
+                        height: nextBar!.accents[i + j] ? 22.5 : 15.0,
+                        decoration: BoxDecoration(
+                          color:  theme.colorScheme.primary,
+                          shape: BoxShape.circle,
+                        )))
+            ]),
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -268,6 +292,8 @@ class _MetronomeV2State extends State<MetronomeV2> {
                       setState(() {
                         barIndex = 0;
                         currentBar = currentRhythm!.barList[barIndex];
+                        nextBarIndex = nextBarIndex == currentRhythm!.barList.length ? 0 : barIndex + 1;
+                        nextBar = currentRhythm!.barList[nextBarIndex];
                         currentNote = -1;
                         currentRepetition = 1;
                         previousBarTempo = currentRhythm!.barList.last.tempo.toDouble();
