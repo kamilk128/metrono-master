@@ -94,7 +94,7 @@ class _EditBarViewState extends State<EditBarView> {
                         border: InputBorder.none,
                         hintText: AppLocalizations.of(context)!.enterTempo,
                         hintStyle: headerStyle,
-                        contentPadding: const EdgeInsets.all(2),
+                        contentPadding: const EdgeInsets.all(2.0),
                       ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(Bar.tempoRange.$2.toString().length),
@@ -137,7 +137,7 @@ class _EditBarViewState extends State<EditBarView> {
                         border: InputBorder.none,
                         hintText: AppLocalizations.of(context)!.enterUpperMeter,
                         hintStyle: headerStyle,
-                        contentPadding: const EdgeInsets.all(2),
+                        contentPadding: const EdgeInsets.all(2.0),
                       ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(Bar.meterTopRange.$2.toString().length),
@@ -167,7 +167,7 @@ class _EditBarViewState extends State<EditBarView> {
                         border: InputBorder.none,
                         hintText: AppLocalizations.of(context)!.enterLowerMeter,
                         hintStyle: headerStyle,
-                        contentPadding: const EdgeInsets.all(2),
+                        contentPadding: const EdgeInsets.all(2.0),
                       ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(Bar.meterBottomRange.$2.toString().length),
@@ -210,7 +210,7 @@ class _EditBarViewState extends State<EditBarView> {
                         border: InputBorder.none,
                         hintText: AppLocalizations.of(context)!.enterNumberOfRepeats,
                         hintStyle: headerStyle,
-                        contentPadding: const EdgeInsets.all(2),
+                        contentPadding: const EdgeInsets.all(2.0),
                       ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(Bar.repetitionsRange.$2.toString().length),
@@ -253,7 +253,7 @@ class _EditBarViewState extends State<EditBarView> {
                         border: InputBorder.none,
                         hintText: AppLocalizations.of(context)!.enterAccentPosition,
                         hintStyle: headerStyle,
-                        contentPadding: const EdgeInsets.all(2),
+                        contentPadding: const EdgeInsets.all(2.0),
                       ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(Bar.accentsRange.$2.toString().length),

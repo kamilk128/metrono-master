@@ -64,7 +64,11 @@ class _MetronomeV2State extends State<MetronomeV2> {
         }
       }
       if (currentRepetition == currentBar!.repetitions) {
-        nextBarIndex = nextBarIndex == currentRhythm!.barList.length ? 0 : barIndex + 1;
+        if (barIndex + 1 == currentRhythm!.barList.length) {
+          nextBarIndex = 0;
+        } else {
+          nextBarIndex = barIndex + 1;
+        }
         nextBar = currentRhythm!.barList[nextBarIndex];
       }
     } else {
@@ -118,7 +122,11 @@ class _MetronomeV2State extends State<MetronomeV2> {
     } else {
       currentRhythm ??= rhythmList.contains(appState.lastRhythm) ? appState.lastRhythm : rhythmList[0];
       currentBar ??= currentRhythm!.barList[barIndex];
-      nextBarIndex = nextBarIndex == currentRhythm!.barList.length ? 0 : barIndex + 1;
+      nextBarIndex = barIndex + 1 == currentRhythm!.barList.length
+          ? 0
+          : currentRepetition != currentBar!.repetitions
+              ? barIndex
+              : barIndex + 1;
       nextBar ??= currentRhythm!.barList[nextBarIndex];
       appState.lastRhythm = currentRhythm;
       if (previousBarTempo == -1 || currentTempo == -1) {
@@ -161,7 +169,11 @@ class _MetronomeV2State extends State<MetronomeV2> {
                   currentRhythm = value;
                   barIndex = 0;
                   currentBar = currentRhythm!.barList[barIndex];
-                  nextBarIndex = nextBarIndex == currentRhythm!.barList.length ? 0 : barIndex + 1;
+                  nextBarIndex = barIndex + 1 == currentRhythm!.barList.length
+                      ? 0
+                      : currentRepetition != currentBar!.repetitions
+                          ? 0
+                          : 1;
                   nextBar = currentRhythm!.barList[nextBarIndex];
                   currentNote = -1;
                   currentRepetition = 1;
@@ -233,7 +245,7 @@ class _MetronomeV2State extends State<MetronomeV2> {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               for (int i = 0; i < min(currentBar!.meter.$2, 8) && i + j < currentBar!.meter.$1; i++)
                 Padding(
-                    padding: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(2.0),
                     child: Container(
                         width: currentBar!.accents[i + j] ? 45.0 : 30.0,
                         height: currentBar!.accents[i + j] ? 45.0 : 30.0,
@@ -249,14 +261,18 @@ class _MetronomeV2State extends State<MetronomeV2> {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               for (int i = 0; i < min(nextBar!.meter.$2, 8) && i + j < nextBar!.meter.$1; i++)
                 Padding(
-                    padding: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(2.0),
                     child: Container(
                         width: nextBar!.accents[i + j] ? 22.5 : 15.0,
                         height: nextBar!.accents[i + j] ? 22.5 : 15.0,
                         decoration: BoxDecoration(
-                          color:  theme.colorScheme.primary,
+                          color: theme.colorScheme.primary,
                           shape: BoxShape.circle,
-                        )))
+                        ))),
+              if (nextBar!.tempo > currentTempo)
+                Icon(Icons.trending_up, color: theme.colorScheme.primary)
+              else if (nextBar!.tempo < currentTempo)
+                Icon(Icons.trending_down, color: theme.colorScheme.primary)
             ]),
           const Spacer(),
           Row(
@@ -292,7 +308,11 @@ class _MetronomeV2State extends State<MetronomeV2> {
                       setState(() {
                         barIndex = 0;
                         currentBar = currentRhythm!.barList[barIndex];
-                        nextBarIndex = nextBarIndex == currentRhythm!.barList.length ? 0 : barIndex + 1;
+                        nextBarIndex = barIndex + 1 == currentRhythm!.barList.length
+                            ? 0
+                            : currentRepetition != currentBar!.repetitions
+                                ? 0
+                                : 1;
                         nextBar = currentRhythm!.barList[nextBarIndex];
                         currentNote = -1;
                         currentRepetition = 1;
