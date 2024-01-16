@@ -269,9 +269,9 @@ class _MetronomeV2State extends State<MetronomeV2> {
                           color: theme.colorScheme.primary,
                           shape: BoxShape.circle,
                         ))),
-              if (nextBar!.tempo > currentTempo)
+              if (j == 0 && nextBar!.tempo > currentTempo)
                 Icon(Icons.trending_up, color: theme.colorScheme.primary)
-              else if (nextBar!.tempo < currentTempo)
+              else if (j == 0 && nextBar!.tempo < currentTempo)
                 Icon(Icons.trending_down, color: theme.colorScheme.primary)
             ]),
           const Spacer(),
