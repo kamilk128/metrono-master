@@ -22,7 +22,10 @@ Metrono-Master is an application designed to function as a metronome with some a
 
 ---
 
-# MetronoMaster
+## Technologies
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
 
 ## Installing Dependencies
 
